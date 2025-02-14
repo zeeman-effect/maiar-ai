@@ -1,0 +1,25 @@
+.ascii {
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: normal;
+  transform: scale(1, 1.2);
+  display: inline-block;
+  color: #88ff88;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  cursor: pointer;
+  pointer-events: none;
+  background: transparent !important;
+  margin: 0;
+  padding: 1;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .ascii {
+    font-size: 5px !important;
+    line-height: 7px !important;
+  }
+}

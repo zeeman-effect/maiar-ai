@@ -1,0 +1,71 @@
+---
+name: ♻️ CI Workflow
+on:
+  pull_request:
+    branches:
+      - "*"
+
+env:
+  CI: ${{ vars.CI }}
+  HUSKY: ${{ vars.HUSKY }}
+
+jobs:
+  commit-lint:
+    name: 🧹 Commit Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🌎 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+
+      - name: 📦 Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: package.json
+          run_install: false
+
+      - name: 📦 Install Dependencies
+        run: pnpm install
+
+      - name: 🧹 Lint Commits
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlintrc.ts
+          helpURL: https://github.com/conventional-changelog/commitlint/#what-is-commitlint
+
+  build-lint:
+    name: 🧱🧹 Build Packages and Lint Codebase
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🌎 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+
+      - name: 📦 Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: package.json
+          run_install: false
+
+      - name: 📦 Install Dependencies
+        run: pnpm install
+
+      # NOTE: Must build packages before linting due to official plugins dependency on @maiar-ai/core package - Linting will fail upfront otherwise
+      - name: 🧱 Build Packages
+        run: pnpm run build
+
+      - name: 🧹 Lint TypeScript
+        run: pnpm run lint
+
+      - name: 🧹 Lint ESLint
+        run: pnpm run eslint

@@ -1,0 +1,37 @@
+# Additions
+tmp
+
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build
+dist
+build
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment variables
+**/.env
+**/.env.*
+!**/.env.example
+
+# Turbo
+.turbo
+
+# Coverage
+coverage
+
+# IDE
+.idea
+.vscode 
+
+# Logs and all the files in the logs directory
+logs
+
+# Data directory
+**/data/

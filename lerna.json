@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "0.1.1",
+  "packages": [
+    "packages/core",
+    "packages/memory-filesystem",
+    "packages/memory-sqlite",
+    "packages/model-ollama",
+    "packages/model-openai",
+    "packages/plugin-express",
+    "packages/plugin-image",
+    "packages/plugin-telegram",
+    "packages/plugin-terminal",
+    "packages/plugin-text",
+    "packages/plugin-time",
+    "packages/plugin-websocket"
+  ],
+  "npmClient": "pnpm",
+  "command": {
+    "publish": {
+      "registry": "https://registry.npmjs.org/"
+    },
+    "version": {
+      "message": "chore(release): 🔖 create new tag and release %s",
+      "conventionalCommits": true
+    }
+  },
+  "ignoreChanges": ["!packages/**/src/*.ts"]
+}

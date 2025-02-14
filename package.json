@@ -1,0 +1,69 @@
+{
+  "name": "@maiar-ai/monorepo",
+  "private": true,
+  "description": "Maiar: A Composable, Plugin-Based AI Agent Framework",
+  "keywords": [
+    "ai",
+    "agent",
+    "framework",
+    "plugin"
+  ],
+  "author": "UraniumCorporation <contact@maiar.dev> (https://maiar.dev)",
+  "license": "MIT",
+  "homepage": "https://maiar.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UraniumCorporation/maiar-ai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UraniumCorporation/maiar-ai/issues"
+  },
+  "engines": {
+    "node": "22.13.1"
+  },
+  "type": "module",
+  "scripts": {
+    "prepare": "husky",
+    "dev": "turbo run dev --filter=./packages/*",
+    "build": "turbo run build",
+    "build:packages": "turbo run build --filter=./packages/*",
+    "build:website": "turbo run build --filter=./website",
+    "build:starter": "turbo run build --filter=./maiar-starter",
+    "commit": "cz",
+    "commitlint": "commitlint --edit",
+    "lint": "turbo run lint",
+    "eslint": "eslint . --max-warnings 0",
+    "prettier": "prettier --write .",
+    "whitepaper": "mkdir -p tmp_latex && pdflatex -output-directory=tmp_latex -interaction=nonstopmode -halt-on-error maiar.tex > /dev/null 2>&1 && pdflatex -output-directory=tmp_latex -interaction=nonstopmode -halt-on-error maiar.tex > /dev/null 2>&1 && mv tmp_latex/maiar.pdf . && rm -rf tmp_latex"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.6.1",
+    "@commitlint/config-conventional": "19.6.0",
+    "@commitlint/format": "19.5.0",
+    "@commitlint/types": "19.5.0",
+    "@eslint/js": "9.19.0",
+    "@types/node": "22.13.1",
+    "commitizen": "4.3.1",
+    "conventional-changelog-atom": "5.0.0",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint-config-prettier": "10.0.1",
+    "husky": "9.1.7",
+    "lerna": "8.1.9",
+    "prettier": "3.4.2",
+    "tsup": "8.3.6",
+    "turbo": "2.3.3",
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.22.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "workspaces": [
+    "packages/*",
+    "website",
+    "maiar-starter"
+  ],
+  "packageManager": "pnpm@9.15.4"
+}

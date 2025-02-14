@@ -1,0 +1,3 @@
+---
+source-code:
+  - "packages/**/src/**/*.ts"
