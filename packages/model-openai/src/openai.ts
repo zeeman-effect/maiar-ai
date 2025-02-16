@@ -47,6 +47,21 @@ export class OpenAIProvider implements ModelProvider {
   }
 
   async init(): Promise<void> {
-    // No initialization needed for OpenAI
+    await this.checkHealth();
+  }
+
+  async checkHealth(): Promise<void> {
+    try {
+      const resp = await this.getText("are you alive?", {
+        temperature: 0.7
+      });
+      log.debug(`checkHealth result: ${resp}`);
+      log.info({ msg: `Model ${this.id} health check passed` });
+    } catch (error) {
+      log.error({ msg: `Model ${this.id} health check failed`, error });
+      throw new Error(
+        `Failed to initialize Model ${this.id}: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
   }
 }
