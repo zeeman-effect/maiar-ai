@@ -59,10 +59,42 @@ export class OllamaProvider implements ModelProvider {
   }
 
   async init(): Promise<void> {
-    // No initialization needed for Ollama
+    await this.checkHealth();
   }
 
+  /**
+   * Make sure that the provided baseUrl returns the /api/models endpoint successfully
+   * and there is at least 1 model deployed on the server.
+   */
   async checkHealth(): Promise<void> {
-    return Promise.resolve(undefined);
+    try {
+      // Send a GET request to the health endpoint
+      const response = await fetch(`${this.baseUrl}/api/models`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      // Ensure the server responded successfully
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Parse the JSON response
+      const data = await response.json();
+
+      // Verify that the JSON object has a 'models' array and it contains at least one element
+      if (!data || !Array.isArray(data.models) || data.models.length === 0) {
+        throw new Error(
+          "Health check failed: 'models' array is missing or empty"
+        );
+      }
+
+      log.info({ msg: "Ollama model health check passed" });
+    } catch (error) {
+      log.error("Error during health check:", error);
+      throw error;
+    }
   }
 }
