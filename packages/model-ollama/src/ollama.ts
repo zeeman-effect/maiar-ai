@@ -69,11 +69,9 @@ export class OllamaProvider implements ModelProvider {
   async checkHealth(): Promise<void> {
     try {
       // Send a GET request to the health endpoint
-      const response = await fetch(`${this.baseUrl}/api/models`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
+      const modelsUrl = `${this.baseUrl}/api/tags`;
+      const response = await fetch(modelsUrl, {
+        method: "GET"
       });
 
       // Ensure the server responded successfully
@@ -91,9 +89,21 @@ export class OllamaProvider implements ModelProvider {
         );
       }
 
-      log.info({ msg: "Ollama model health check passed" });
+      // Verify that the provided this.model exists in one of the models.
+      const modelExists = data.models.some(
+        (m: { name: string; model: string }) => m.model === this.model
+      );
+
+      if (!modelExists) {
+        throw new Error(`Model "${this.model}" not deployed in Ollama server`);
+      }
+
+      log.info({ msg: `Ollama model '${this.model}' health check passed` });
     } catch (error) {
-      log.error("Error during health check:", error);
+      log.error(
+        `Ollama model '${this.model}' health check failed: model not deployed`,
+        error
+      );
       throw error;
     }
   }
