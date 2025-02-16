@@ -25,10 +25,11 @@ export class LLMService {
   private defaultModelId: string | null = null;
 
   constructor(model?: ModelProvider) {
-    log.debug({ msg: "Initializing LLM service" });
+    log.debug({ msg: `Initializing LLM service: ${model?.id}` });
     if (model) {
       this.registerModel(model, "default");
     }
+    log.info({ msg: `Initialized LLM service: ${model?.id}` });
   }
 
   /**
