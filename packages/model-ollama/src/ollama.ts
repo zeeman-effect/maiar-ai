@@ -61,4 +61,8 @@ export class OllamaProvider implements ModelProvider {
   async init(): Promise<void> {
     // No initialization needed for Ollama
   }
+
+  async checkHealth(): Promise<void> {
+    return Promise.resolve(undefined);
+  }
 }

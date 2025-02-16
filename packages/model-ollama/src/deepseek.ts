@@ -80,4 +80,8 @@ export class DeepseekProvider implements ModelProvider {
   async init(): Promise<void> {
     // No initialization needed for Deepseek
   }
+
+  async checkHealth(): Promise<void> {
+    return Promise.resolve(undefined);
+  }
 }
