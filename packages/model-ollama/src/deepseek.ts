@@ -78,10 +78,58 @@ export class DeepseekProvider implements ModelProvider {
   }
 
   async init(): Promise<void> {
-    // No initialization needed for Deepseek
+    await this.checkHealth();
   }
 
   async checkHealth(): Promise<void> {
-    return Promise.resolve(undefined);
+    const prefix = "deepseek-";
+    if (!this.model.startsWith(prefix)) {
+      throw new Error(
+        `Deepseek Model "${this.model}" must be prefixed with ${prefix}`
+      );
+    }
+
+    try {
+      // Send a GET request to the health endpoint
+      const modelsUrl = `${this.baseUrl}/api/tags`;
+      const response = await fetch(modelsUrl, {
+        method: "GET"
+      });
+
+      // Ensure the server responded successfully
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Parse the JSON response
+      const data = await response.json();
+
+      // Verify that the JSON object has a 'models' array and it contains at least one element
+      if (!data || !Array.isArray(data.models) || data.models.length === 0) {
+        throw new Error(
+          "Health check failed: 'models' array is missing or empty"
+        );
+      }
+
+      // Verify that the provided this.model exists in one of the models,
+      // either as an exact match or as a model name prefixed with "deepseek-" (from above check)
+      const modelExists = data.models.some(
+        (m: { name: string; model: string }) => m.model === this.model
+      );
+
+      if (!modelExists) {
+        throw new Error(
+          `Deepseek Model "${this.model}" not deployed in Ollama server`
+        );
+      }
+
+      log.info({ msg: `Deepseek model '${this.model}' health check passed` });
+    } catch (error) {
+      log.error(
+        `Deepseek model '${this.model}' health check failed: model not deployed in ollama server`,
+        error
+      );
+      throw error;
+    }
   }
 }
