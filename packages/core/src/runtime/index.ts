@@ -36,6 +36,19 @@ export function createRuntime(options: RuntimeOptions): Runtime {
   // Initialize LLM service with the provided model
   const llmService = new LLMService(options.model);
 
+  if (options.model.init) {
+    // Initialize it
+    options.model
+      .init()
+      .then(() => {
+        log.debug("LLM Model initialized successfully!");
+      })
+      .catch((err) => {
+        log.error("LLM Model failed to initialize", err);
+        throw new Error(err.message);
+      });
+  }
+
   // Initialize memory service with the provided provider
   const memoryService = new MemoryService(options.memory);
 

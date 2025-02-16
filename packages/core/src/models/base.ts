@@ -22,6 +22,8 @@ export interface ModelInterface {
    * Initialize the model with any necessary setup
    */
   init?(): Promise<void>;
+
+  checkHealth(): Promise<void>;
 }
 
 /**
@@ -80,5 +82,9 @@ export class LoggingModelDecorator implements ModelInterface {
     if (this.model.init) {
       return this.model.init();
     }
+  }
+
+  checkHealth(): Promise<void> {
+    return Promise.resolve(undefined);
   }
 }
