@@ -95,7 +95,12 @@ export class OllamaProvider implements ModelProvider {
       );
 
       if (!modelExists) {
-        throw new Error(`Model "${this.model}" not deployed in Ollama server`);
+        const availableModels = data.models
+          .map((m: { model: string }) => m.model)
+          .join(", ");
+        throw new Error(
+          `Model "${this.model}" not deployed in Ollama server. Available models: ${availableModels}`
+        );
       }
 
       log.info({ msg: `Ollama model '${this.model}' health check passed` });

@@ -118,8 +118,11 @@ export class DeepseekProvider implements ModelProvider {
       );
 
       if (!modelExists) {
+        const availableModels = data.models
+          .map((m: { model: string }) => m.model)
+          .join(", ");
         throw new Error(
-          `Deepseek Model "${this.model}" not deployed in Ollama server`
+          `Model "${this.model}" not deployed in Ollama server. Available models: ${availableModels}`
         );
       }
 
