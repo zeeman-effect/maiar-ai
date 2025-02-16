@@ -59,7 +59,7 @@ export class OllamaProvider implements ModelProvider {
   }
 
   async init(): Promise<void> {
-    await this.checkHealth();
+    // Nothing to implemnt
   }
 
   /**

@@ -49,6 +49,30 @@ export function createRuntime(options: RuntimeOptions): Runtime {
       });
   }
 
+  if (options.model.init) {
+    // Initialize it
+    options.model
+      .init()
+      .then(() => {
+        log.debug("LLM Model initialized successfully!");
+      })
+      .catch((err) => {
+        log.error("LLM Model failed to initialize", err);
+        throw new Error(err.message);
+      });
+  }
+
+  // Do check if the healthcheck is good before bootstrapping.
+  options.model
+    .checkHealth()
+    .then(() => {
+      log.debug("LLM Model healthcheck passed!");
+    })
+    .catch((err) => {
+      log.error("LLM Model healthcheck failed", err);
+      throw new Error(err.message);
+    });
+
   // Initialize memory service with the provided provider
   const memoryService = new MemoryService(options.memory);
 

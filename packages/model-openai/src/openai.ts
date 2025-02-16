@@ -47,10 +47,11 @@ export class OpenAIProvider implements ModelProvider {
   }
 
   async init(): Promise<void> {
-    await this.checkHealth();
+    // Nothing to init
   }
 
   async checkHealth(): Promise<void> {
+    // Verifying if we can call the API
     try {
       const resp = await this.getText("are you alive?", {
         temperature: 0.7

@@ -78,7 +78,7 @@ export class DeepseekProvider implements ModelProvider {
   }
 
   async init(): Promise<void> {
-    await this.checkHealth();
+    // Nothing to implemnt
   }
 
   async checkHealth(): Promise<void> {
