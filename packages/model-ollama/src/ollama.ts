@@ -1,5 +1,6 @@
 import { ModelProvider, ModelRequestConfig } from "@maiar-ai/core";
 import { createLogger } from "@maiar-ai/core";
+import { verifyBasicHealth } from "./index";
 
 const log = createLogger("model:ollama");
 
@@ -68,41 +69,8 @@ export class OllamaProvider implements ModelProvider {
    */
   async checkHealth(): Promise<void> {
     try {
-      // Send a GET request to the health endpoint
-      const modelsUrl = `${this.baseUrl}/api/tags`;
-      const response = await fetch(modelsUrl, {
-        method: "GET"
-      });
-
-      // Ensure the server responded successfully
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // Parse the JSON response
-      const data = await response.json();
-
-      // Verify that the JSON object has a 'models' array and it contains at least one element
-      if (!data || !Array.isArray(data.models) || data.models.length === 0) {
-        throw new Error(
-          "Health check failed: 'models' array is missing or empty"
-        );
-      }
-
-      // Verify that the provided this.model exists in one of the models.
-      const modelExists = data.models.some(
-        (m: { name: string; model: string }) => m.model === this.model
-      );
-
-      if (!modelExists) {
-        const availableModels = data.models
-          .map((m: { model: string }) => m.model)
-          .join(", ");
-        throw new Error(
-          `Model "${this.model}" not deployed in Ollama server. Available models: ${availableModels}`
-        );
-      }
-
+      // Send a GET request to the tag endpoint and verify if the model exists
+      await verifyBasicHealth(this.baseUrl, this.model);
       log.info({ msg: `Ollama model '${this.model}' health check passed` });
     } catch (error) {
       log.error(
