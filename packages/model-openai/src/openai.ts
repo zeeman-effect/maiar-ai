@@ -53,9 +53,13 @@ export class OpenAIProvider implements ModelProvider {
   async checkHealth(): Promise<void> {
     // Verifying if we can call the API
     try {
-      const resp = await this.getText("are you alive?", {
-        temperature: 0.7
-      });
+      const resp = await this.getText(
+        "are you alive? Please respond 'yes' or 'no' only.",
+        {
+          temperature: 0.7,
+          maxTokens: 5
+        }
+      );
       log.debug(`checkHealth result: ${resp}`);
       log.info({ msg: `Model ${this.id} health check passed` });
     } catch (error) {
