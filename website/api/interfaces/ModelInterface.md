@@ -47,3 +47,15 @@ Initialize the model with any necessary setup
 #### Returns
 
 `Promise`\<`void`\>
+
+***
+
+### checkHealth()
+
+> **checkHealth**(): `Promise`\<`void`\>
+
+Defined in: [packages/core/src/models/base.ts:26](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L26)
+
+#### Returns
+
+`Promise`\<`void`\>

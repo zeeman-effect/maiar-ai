@@ -80,3 +80,19 @@ Initialize the model with any necessary setup
 #### Inherited from
 
 [`ModelInterface`](ModelInterface.md).[`init`](ModelInterface.md#init)
+
+***
+
+### checkHealth()
+
+> **checkHealth**(): `Promise`\<`void`\>
+
+Defined in: [packages/core/src/models/base.ts:26](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L26)
+
+#### Returns
+
+`Promise`\<`void`\>
+
+#### Inherited from
+
+[`ModelInterface`](ModelInterface.md).[`checkHealth`](ModelInterface.md#checkhealth)

@@ -2,7 +2,7 @@
 
 # Class: LoggingModelDecorator
 
-Defined in: [packages/core/src/models/base.ts:34](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L34)
+Defined in: [packages/core/src/models/base.ts:36](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L36)
 
 Decorator that adds logging to any ModelInterface implementation.
 Logs all prompts, responses, and errors to the model interactions log file.
@@ -20,7 +20,7 @@ without requiring the model implementations to handle logging themselves.
 
 > **new LoggingModelDecorator**(`model`, `modelId`): [`LoggingModelDecorator`](LoggingModelDecorator.md)
 
-Defined in: [packages/core/src/models/base.ts:35](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L35)
+Defined in: [packages/core/src/models/base.ts:37](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L37)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [packages/core/src/models/base.ts:35](https://github.com/UraniumCorp
 
 > **getText**(`prompt`, `config`?): `Promise`\<`string`\>
 
-Defined in: [packages/core/src/models/base.ts:40](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L40)
+Defined in: [packages/core/src/models/base.ts:42](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L42)
 
 Get a text completion from the model
 
@@ -70,7 +70,7 @@ Get a text completion from the model
 
 > **init**(): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/models/base.ts:79](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L79)
+Defined in: [packages/core/src/models/base.ts:81](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L81)
 
 Initialize the model with any necessary setup
 
@@ -81,3 +81,19 @@ Initialize the model with any necessary setup
 #### Implementation of
 
 [`ModelInterface`](../interfaces/ModelInterface.md).[`init`](../interfaces/ModelInterface.md#init)
+
+***
+
+### checkHealth()
+
+> **checkHealth**(): `Promise`\<`void`\>
+
+Defined in: [packages/core/src/models/base.ts:87](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L87)
+
+#### Returns
+
+`Promise`\<`void`\>
+
+#### Implementation of
+
+[`ModelInterface`](../interfaces/ModelInterface.md).[`checkHealth`](../interfaces/ModelInterface.md#checkhealth)

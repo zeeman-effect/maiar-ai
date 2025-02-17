@@ -30,7 +30,7 @@ Defined in: [packages/core/src/models/service.ts:27](https://github.com/UraniumC
 
 > **registerModel**(`model`, `modelId`): `void`
 
-Defined in: [packages/core/src/models/service.ts:37](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L37)
+Defined in: [packages/core/src/models/service.ts:38](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L38)
 
 Register a model
 
@@ -54,7 +54,7 @@ Register a model
 
 > **getText**(`prompt`, `config`?): `Promise`\<`string`\>
 
-Defined in: [packages/core/src/models/service.ts:61](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L61)
+Defined in: [packages/core/src/models/service.ts:62](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L62)
 
 Get text completion from the default or specified model
 
@@ -78,7 +78,7 @@ Get text completion from the default or specified model
 
 > **setDefaultModel**(`modelId`): `void`
 
-Defined in: [packages/core/src/models/service.ts:81](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L81)
+Defined in: [packages/core/src/models/service.ts:82](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L82)
 
 Set the default model
 
@@ -98,7 +98,7 @@ Set the default model
 
 > **getDefaultModelId**(): `null` \| `string`
 
-Defined in: [packages/core/src/models/service.ts:92](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L92)
+Defined in: [packages/core/src/models/service.ts:93](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L93)
 
 Get the current default model ID
 
@@ -112,7 +112,7 @@ Get the current default model ID
 
 > **getModelIds**(): `string`[]
 
-Defined in: [packages/core/src/models/service.ts:99](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L99)
+Defined in: [packages/core/src/models/service.ts:100](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L100)
 
 Get all registered model IDs
 
