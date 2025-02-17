@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.4.0...v0.5.0) (2025-02-17)
+
+### Bug Fixes
+
+- **core:** :recycle: split init() and checkHealth() in runtime ([e893a5e](https://github.com/UraniumCorporation/maiar-ai/commit/e893a5e0f04b843b15ef4e1c25ecb37829ad5186))
+- **core:** openai checkHealth should limit response payload + maxTokens ([3e81ddd](https://github.com/UraniumCorporation/maiar-ai/commit/3e81ddd082c5047709d9d27553fc54aaf8b0c251))
+
+### Features
+
+- **core:** :recycle: add openai checkHealth() ([96cd9e4](https://github.com/UraniumCorporation/maiar-ai/commit/96cd9e424358d1865f0bd34a96d0c090103325ef))
+
 # [0.4.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.3.0...v0.4.0) (2025-02-15)
 
 **Note:** Version bump only for package @maiar-ai/model-openai
