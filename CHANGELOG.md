@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.5.0...v0.6.0) (2025-02-18)
+
+### Bug Fixes
+
+- support methods on ExpressRoutes ([a5d1a6e](https://github.com/UraniumCorporation/maiar-ai/commit/a5d1a6e2504ba8744adce3d0baf02737418ade44))
+
+### Features
+
+- support method specification in ExpressRoute type ([527d950](https://github.com/UraniumCorporation/maiar-ai/commit/527d95054e00bfbf66b2480af933cb9098913aba))
+
 # [0.5.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.4.0...v0.5.0) (2025-02-17)
 
 ### Bug Fixes

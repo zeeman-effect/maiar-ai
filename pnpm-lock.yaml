@@ -95,12 +95,12 @@ importers:
         specifier: 4.21.2
         version: 4.21.2
     devDependencies:
-      chokidar-cli:
-        specifier: 3.0.0
-        version: 3.0.0
       "@types/express":
         specifier: 5.0.0
         version: 5.0.0
+      chokidar-cli:
+        specifier: 3.0.0
+        version: 3.0.0
       dotenv-cli:
         specifier: 8.0.0
         version: 8.0.0
