@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.1](https://github.com/UraniumCorporation/maiar-ai/compare/v0.6.0...v0.6.1) (2025-02-18)
+
+**Note:** Version bump only for package @maiar-ai/model-openai
+
 # [0.6.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.5.0...v0.6.0) (2025-02-18)
 
 **Note:** Version bump only for package @maiar-ai/model-openai
@@ -60,3 +64,7 @@ This release includes the core framework and official plugins we will support, w
   - 💾 Memory Providers
     - 📂 **@maiar-ai/memory-filesystem** - A filesystem-based memory provider.
     - 🗄️ **@maiar-ai/memory-sqlite** - A SQLite-based memory provider.
+
+# [0.6.1](https://github.com/UraniumCorporation/maiar-ai/compare/v0.6.0...v0.6.1) (2025-02-18)
+
+**Note:** Version bump only for package @maiar-ai/model-openai
