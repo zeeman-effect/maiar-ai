@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.6.1...v0.7.0) (2025-02-19)
+
+### Features
+
+- plugin-x abstract more settings to plugin config ([459502c](https://github.com/UraniumCorporation/maiar-ai/commit/459502c9c8962ae927f210854afe2cce6331b457))
+
 ## [0.6.1](https://github.com/UraniumCorporation/maiar-ai/compare/v0.6.0...v0.6.1) (2025-02-18)
 
 ### Bug Fixes
