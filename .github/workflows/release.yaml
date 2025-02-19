@@ -196,6 +196,7 @@ jobs:
           echo "API documentation has changed from relevant code changes in packages/**/src/*.ts files"
           echo "Committing API documentation changes..."
 
+          git pull
           git add website/api
           git commit -m "docs(website): update API documentation between commits ${{ github.event.before }}..${{ github.sha }}"
           git push
