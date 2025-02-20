@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.7.0...v0.8.0) (2025-02-20)
+
+### Features
+
+- **maiar-starter:** add terminal plugin to starter project ([297ec63](https://github.com/UraniumCorporation/maiar-ai/commit/297ec63bf3c496a17bf1d9bb90ee8817d1e1dce2))
+- **plugin-terminal:** generic chat feature, configurable through plugin class ([55b2797](https://github.com/UraniumCorporation/maiar-ai/commit/55b27979013abc3aaa9688287baf2430926be148))
+
 # [0.7.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.6.1...v0.7.0) (2025-02-19)
 
 ### Features
