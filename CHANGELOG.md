@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.8.0...v0.9.0) (2025-02-22)
+
+### Bug Fixes
+
+- add pnpm-locak.yaml ([bf39aae](https://github.com/UraniumCorporation/maiar-ai/commit/bf39aaea4ada05d5e8900f209cdcb9e5afd14c2f))
+- address comments & update docs ([250de8f](https://github.com/UraniumCorporation/maiar-ai/commit/250de8f3b19fa15eaaba21c1a2dd2fba24966053))
+- incorrect types used on handlers ([c047356](https://github.com/UraniumCorporation/maiar-ai/commit/c0473567dd0e9de1876bd059f78c7276a70d0fc6))
+- update landing page ca ([8e15e19](https://github.com/UraniumCorporation/maiar-ai/commit/8e15e191da01456af069c412af5bc788221bdcf2))
+
+### Features
+
+- breaking change: making plugin-telegram composable through composers ([965d1a0](https://github.com/UraniumCorporation/maiar-ai/commit/965d1a043a3f658b8c92c5acff4f60bca473aa31))
+- making telegram plugin generic ([6f3ed20](https://github.com/UraniumCorporation/maiar-ai/commit/6f3ed207161f1fa23317d87ac371793a7b564828))
+- plugin-telegram changes ([4f3fd3c](https://github.com/UraniumCorporation/maiar-ai/commit/4f3fd3c0a1cc830ba4db1470a0262140c98868f0))
+
+### BREAKING CHANGES
+
+- moving telegram plugin to accept Telegraf composer resulting in a backwards compatability break
+
 # [0.8.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.7.0...v0.8.0) (2025-02-20)
 
 ### Features
