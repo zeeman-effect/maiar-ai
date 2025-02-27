@@ -10,6 +10,7 @@ Base context item that all items must include
 
 - [`UserInputContext`](UserInputContext.md)
 - [`HistoryContextItem`](HistoryContextItem.md)
+- [`ErrorContextItem`](ErrorContextItem.md)
 
 ## Properties
 

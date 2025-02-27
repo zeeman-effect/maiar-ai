@@ -1,4 +1,4 @@
-# @maiar-ai/core v0.8.0
+# @maiar-ai/core v0.9.0
 
 ## Classes
 
@@ -28,6 +28,8 @@
 - [RuntimeConfig](interfaces/RuntimeConfig.md)
 - [RuntimeOptions](interfaces/RuntimeOptions.md)
 - [PipelineGenerationContext](interfaces/PipelineGenerationContext.md)
+- [ErrorContextItem](interfaces/ErrorContextItem.md)
+- [PipelineEvaluationContext](interfaces/PipelineEvaluationContext.md)
 - [BaseContextItem](interfaces/BaseContextItem.md)
 - [UserInputContext](interfaces/UserInputContext.md)
 - [HistoryContextItem](interfaces/HistoryContextItem.md)
@@ -38,11 +40,13 @@
 
 - [PipelineStep](type-aliases/PipelineStep.md)
 - [Pipeline](type-aliases/Pipeline.md)
+- [PipelineModification](type-aliases/PipelineModification.md)
 
 ## Variables
 
 - [PipelineStepSchema](variables/PipelineStepSchema.md)
 - [PipelineSchema](variables/PipelineSchema.md)
+- [PipelineModificationSchema](variables/PipelineModificationSchema.md)
 
 ## Functions
 
@@ -50,3 +54,4 @@
 - [getUserInput](functions/getUserInput.md)
 - [logModelInteraction](functions/logModelInteraction.md)
 - [createLogger](functions/createLogger.md)
+- [logPipelineState](functions/logPipelineState.md)
