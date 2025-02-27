@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.9.0...v0.10.0) (2025-02-27)
+
+### Features
+
+- **core:** add dynamic pipeline evaluation and modification with permissions plugin example ([f1143f1](https://github.com/UraniumCorporation/maiar-ai/commit/f1143f1b1e918cceb996681f802604910b3f20b5))
+
 # [0.9.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.8.0...v0.9.0) (2025-02-22)
 
 **Note:** Version bump only for package @maiar-ai/core
