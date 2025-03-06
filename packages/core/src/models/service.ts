@@ -1,103 +1,162 @@
-import {
-  ModelInterface,
-  ModelRequestConfig,
-  LoggingModelDecorator
-} from "./base";
+import { ModelProvider } from "./base";
 import { createLogger } from "../utils/logger";
+import { CapabilityRegistry, ModelCapability } from "./capabilities";
+import { OperationConfig } from "../operations/base";
 
 const log = createLogger("models");
 
 /**
- * Interface for model providers
- * Each provider should implement this interface and be instantiated with its config
+ * Type-safe capability factory interface
  */
-export interface ModelProvider extends ModelInterface {
-  readonly id: string;
-  readonly name: string;
-  readonly description: string;
-}
+export type CapabilityFactory<I, O> = (
+  model: ModelProvider
+) => ModelCapability<I, O>;
 
 /**
- * Service for managing LLM operations
+ * Service for managing model operations
  */
-export class LLMService {
-  private models: Map<string, ModelProvider> = new Map();
-  private defaultModelId: string | null = null;
+export class ModelService {
+  private models = new Map<string, ModelProvider>();
+  private registry = new CapabilityRegistry();
+  private capabilityFactories = new Map<
+    string,
+    CapabilityFactory<unknown, unknown>
+  >();
+  private capabilityAliases = new Map<string, string>();
 
-  constructor(model?: ModelProvider) {
-    log.debug({ msg: `Initializing LLM service: ${model?.id}` });
-    if (model) {
-      this.registerModel(model, "default");
+  constructor() {}
+
+  /**
+   * Register a capability factory
+   */
+  registerCapabilityFactory<I, O>(
+    capabilityId: string,
+    factory: CapabilityFactory<I, O>
+  ): void {
+    this.capabilityFactories.set(capabilityId, factory);
+
+    // Apply this factory to all existing models
+    for (const [modelId, model] of this.models.entries()) {
+      if (model.hasCapability(capabilityId)) {
+        this.registry.registerCapability(modelId, capabilityId);
+      }
     }
-    log.info({ msg: `Initialized LLM service: ${model?.id}` });
+
+    log.debug({ msg: "Registered capability factory", capabilityId });
   }
 
   /**
    * Register a model
    */
-  registerModel(model: ModelProvider, modelId: string): void {
-    // Create a decorated provider that adds logging while preserving the provider interface
-    const decoratedProvider: ModelProvider = {
-      ...model, // Copy all provider properties
-      getText: async (prompt: string, config?: ModelRequestConfig) => {
-        // Create logging decorator just for getText calls
-        const decorator = new LoggingModelDecorator(model, modelId);
-        return decorator.getText(prompt, config);
+  registerModel(model: ModelProvider): void {
+    this.models.set(model.id, model);
+
+    // Register all capabilities provided by the model
+    const capabilities = model.getCapabilities();
+    for (const capability of capabilities) {
+      this.registry.registerCapability(model.id, capability.id);
+
+      // Check if this capability already has a default model
+      // If not, set this model as the default for this capability
+      if (!this.registry.getDefaultModelForCapability(capability.id)) {
+        this.registry.setDefaultModelForCapability(capability.id, model.id);
+        log.debug({
+          msg: "Set default model for capability",
+          capability: capability.id,
+          model: model.id
+        });
       }
-    };
-
-    this.models.set(modelId, decoratedProvider);
-
-    // Set as default if it's the first model
-    if (this.defaultModelId === null) {
-      this.defaultModelId = modelId;
     }
 
-    log.debug({ msg: "Registered model instance", modelId });
+    log.debug({ msg: "Registered model instance", modelId: model.id });
   }
 
   /**
-   * Get text completion from the default or specified model
+   * Register a capability alias
    */
-  async getText(
-    prompt: string,
-    config?: ModelRequestConfig & { modelId?: string }
-  ): Promise<string> {
-    const modelId = config?.modelId || this.defaultModelId;
-    if (!modelId) {
-      throw new Error("No model available");
+  registerCapabilityAlias(alias: string, canonicalId: string): void {
+    if (!this.registry.hasCapability(canonicalId)) {
+      throw new Error(`Capability ${canonicalId} not found`);
+    }
+    this.capabilityAliases.set(alias, canonicalId);
+    log.debug({ msg: "Registered capability alias", alias, canonicalId });
+  }
+
+  /**
+   * Execute a capability with the given input
+   */
+  async executeCapability<I, O>(
+    capabilityId: string,
+    input: I,
+    config?: OperationConfig,
+    modelId?: string
+  ): Promise<O> {
+    // Resolve alias if it exists
+    const resolvedCapabilityId =
+      this.capabilityAliases.get(capabilityId) || capabilityId;
+
+    // Determine which model to use
+    const effectiveModelId =
+      modelId ||
+      this.registry.getDefaultModelForCapability(resolvedCapabilityId);
+
+    if (!effectiveModelId) {
+      throw new Error(
+        `No model specified and no default model set for capability ${resolvedCapabilityId}`
+      );
     }
 
-    const model = this.models.get(modelId);
+    const model = this.models.get(effectiveModelId);
     if (!model) {
-      throw new Error(`Unknown model: ${modelId}`);
+      throw new Error(`Unknown model: ${effectiveModelId}`);
     }
 
-    return model.getText(prompt, config);
-  }
-
-  /**
-   * Set the default model
-   */
-  setDefaultModel(modelId: string): void {
-    if (!this.models.has(modelId)) {
-      throw new Error(`Unknown model: ${modelId}`);
+    // Try to get the capability from the model
+    const capability = model.getCapability<I, O>(resolvedCapabilityId);
+    if (capability) {
+      return capability.execute(input, config);
     }
-    this.defaultModelId = modelId;
-    log.debug({ msg: "Set default model", modelId });
+
+    // Try to create the capability using a registered factory
+    const factory = this.capabilityFactories.get(resolvedCapabilityId);
+    if (!factory) {
+      throw new Error(
+        `Capability ${resolvedCapabilityId} not found on model ${model.id} and no factory registered`
+      );
+    }
+
+    const createdCapability = factory(model) as ModelCapability<I, O>;
+    return createdCapability.execute(input, config);
   }
 
   /**
-   * Get the current default model ID
+   * Get all available capabilities
    */
-  getDefaultModelId(): string | null {
-    return this.defaultModelId;
+  getAvailableCapabilities(): string[] {
+    return this.registry.getAllCapabilities();
   }
 
   /**
-   * Get all registered model IDs
+   * Get all models that support a capability
    */
-  getModelIds(): string[] {
-    return Array.from(this.models.keys());
+  getModelsWithCapability(capabilityId: string): string[] {
+    const resolvedId = this.capabilityAliases.get(capabilityId) || capabilityId;
+    return this.registry.getModelsWithCapability(resolvedId);
+  }
+
+  /**
+   * Set the default model for a capability
+   */
+  setDefaultModelForCapability(capabilityId: string, modelId: string): void {
+    const resolvedId = this.capabilityAliases.get(capabilityId) || capabilityId;
+    this.registry.setDefaultModelForCapability(resolvedId, modelId);
+  }
+
+  /**
+   * Check if any model supports a capability
+   */
+  hasCapability(capabilityId: string): boolean {
+    const resolvedId = this.capabilityAliases.get(capabilityId) || capabilityId;
+    return this.registry.hasCapability(resolvedId);
   }
 }

@@ -1,4 +1,4 @@
-import { ModelProvider, ModelRequestConfig } from "@maiar-ai/core";
+import { ModelProviderBase, ModelRequestConfig } from "@maiar-ai/core";
 import { createLogger } from "@maiar-ai/core";
 import { verifyBasicHealth } from "./index";
 
@@ -16,15 +16,12 @@ High level rules you must follow:
 3. You will not inject chinese characters, mandarin, or chinese into your thoughts, output operations, generated text, or anything else.
 `;
 
-export class DeepseekProvider implements ModelProvider {
-  readonly id = "deepseek";
-  readonly name = "Deepseek";
-  readonly description = "Deepseek models running through Ollama";
-
+export class DeepseekProvider extends ModelProviderBase {
   private baseUrl: string;
   private model: string;
 
   constructor(config: DeepseekConfig) {
+    super("deepseek", "Deepseek", "Deepseek models running through Ollama");
     if (!config.baseUrl) {
       throw new Error("baseUrl is required");
     }
@@ -34,9 +31,18 @@ export class DeepseekProvider implements ModelProvider {
 
     this.baseUrl = config.baseUrl.replace(/\/$/, "");
     this.model = config.model;
+    this.addCapability({
+      id: "deepseek",
+      name: "Deepseek",
+      description: "Deepseek models running through Ollama",
+      execute: this.generateText.bind(this)
+    });
   }
 
-  async getText(prompt: string, config?: ModelRequestConfig): Promise<string> {
+  async generateText(
+    prompt: string,
+    config?: ModelRequestConfig
+  ): Promise<string> {
     try {
       log.info("Sending prompt to Deepseek:", prompt);
 
@@ -76,10 +82,6 @@ export class DeepseekProvider implements ModelProvider {
       log.error("Error getting text from Deepseek:", error);
       throw error;
     }
-  }
-
-  async init(): Promise<void> {
-    // Nothing to implemnt
   }
 
   async checkHealth(): Promise<void> {
