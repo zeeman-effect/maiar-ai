@@ -32,8 +32,8 @@ export class DeepseekProvider extends ModelProviderBase {
     this.baseUrl = config.baseUrl.replace(/\/$/, "");
     this.model = config.model;
     this.addCapability({
-      id: "deepseek",
-      name: "Deepseek",
+      id: "text-generation",
+      name: "Text generation capability",
       description: "Deepseek models running through Ollama",
       execute: this.generateText.bind(this)
     });

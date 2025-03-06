@@ -20,7 +20,7 @@ export class OpenAIProvider extends ModelProviderBase {
 
     this.addCapability({
       id: "text-generation",
-      name: "Generate text with LLM",
+      name: "Text generation capability",
       description: "Generate text completions from prompts",
       execute: this.generateText.bind(this)
     });
@@ -31,24 +31,13 @@ export class OpenAIProvider extends ModelProviderBase {
     config?: ModelRequestConfig
   ): Promise<string> {
     try {
-      // When sending requests to OpenAI, ensure content is properly formatted
       const completion = await this.client.chat.completions.create({
         model: this.model,
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a helpful assistant that responds with valid JSON."
-          },
-          {
-            role: "user",
-            content: prompt // Make sure this is a string, not an object
-          }
-        ],
-        response_format: { type: "json_object" },
-        temperature: config?.temperature ?? 0.7
+        messages: [{ role: "user", content: prompt }],
+        temperature: config?.temperature ?? 0.7,
+        max_tokens: config?.maxTokens,
+        stop: config?.stopSequences
       });
-      log.debug(`OpenAI completion: ${JSON.stringify(completion)}`);
 
       const content = completion.choices[0]?.message?.content;
       if (!content) {

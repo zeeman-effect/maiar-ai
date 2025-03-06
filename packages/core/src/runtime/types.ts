@@ -17,6 +17,9 @@ export const PipelineStepSchema = z
   })
   .describe("A single step in the execution pipeline");
 
+/**
+ * Pipeline definition, a sequence of steps to execute in order
+ */
 export const PipelineSchema = z
   .array(PipelineStepSchema)
   .describe("A sequence of steps to execute in order");

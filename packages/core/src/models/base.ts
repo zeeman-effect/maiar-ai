@@ -35,12 +35,12 @@ export interface ModelProvider {
   hasCapability(capabilityId: string): boolean;
 
   /**
-   * Get a specific capability implementation
+   * Get a specific capability instance
    */
   getCapability<I, O>(capabilityId: string): ModelCapability<I, O> | undefined;
 
   /**
-   * Execute a capability with the given input
+   * Execute a capability
    */
   executeCapability<I, O>(
     capabilityId: string,
@@ -124,8 +124,53 @@ export class LoggingModelDecorator extends ModelProviderBase {
     super(model.id, model.name, model.description);
 
     // Copy all capabilities from the decorated model
+    // but wrap each capability in a logging decorator
     for (const capability of model.getCapabilities()) {
-      this.addCapability(capability);
+      // Create a decorated version of the capability
+      const decoratedCapability: ModelCapability = {
+        id: capability.id,
+        name: capability.name,
+        description: capability.description,
+        execute: async (input: unknown, config?: ModelRequestConfig) => {
+          try {
+            // Log the input
+            logModelInteraction("prompt", {
+              model: this.id,
+              capability: capability.id,
+              input,
+              config
+            });
+
+            // Execute the capability
+            const response = await capability.execute(input, config);
+
+            // Log the response
+            logModelInteraction("response", {
+              model: this.id,
+              capability: capability.id,
+              response,
+              execution_metadata: {
+                timestamp: new Date().toISOString(),
+                config
+              }
+            });
+
+            return response;
+          } catch (error) {
+            // Log any errors
+            logModelInteraction("error", {
+              model: this.id,
+              capability: capability.id,
+              error: error instanceof Error ? error.message : String(error),
+              status: "failed",
+              input
+            });
+            throw error;
+          }
+        }
+      };
+
+      this.addCapability(decoratedCapability);
     }
   }
 
@@ -142,55 +187,6 @@ export class LoggingModelDecorator extends ModelProviderBase {
   async init(): Promise<void> {
     if (this.model.init) {
       return this.model.init();
-    }
-  }
-
-  /**
-   * Execute a capability with logging
-   */
-  async executeCapability<I, O>(
-    capabilityId: string,
-    input: I,
-    config?: ModelRequestConfig
-  ): Promise<O> {
-    try {
-      // Log the input
-      logModelInteraction("prompt", {
-        model: this.id,
-        capability: capabilityId,
-        input,
-        config
-      });
-
-      // Execute the capability on the underlying model
-      const response = await this.model.executeCapability<I, O>(
-        capabilityId,
-        input,
-        config
-      );
-
-      // Log the response
-      logModelInteraction("response", {
-        model: this.id,
-        capability: capabilityId,
-        response,
-        execution_metadata: {
-          timestamp: new Date().toISOString(),
-          config
-        }
-      });
-
-      return response;
-    } catch (error) {
-      // Log any errors
-      logModelInteraction("error", {
-        model: this.id,
-        capability: capabilityId,
-        error: error instanceof Error ? error.message : String(error),
-        status: "failed",
-        input
-      });
-      throw error;
     }
   }
 }
