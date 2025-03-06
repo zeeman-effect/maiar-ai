@@ -34,6 +34,12 @@ export interface Trigger {
   start: (context: AgentContext) => void;
 }
 
+export interface Capability {
+  id: string;
+  description: string;
+  required: boolean;
+}
+
 /**
  * Base plugin interface that all plugins must implement
  */
@@ -43,6 +49,7 @@ export interface Plugin {
   description: string;
   executors: Executor[];
   triggers: Trigger[];
+  capabilities: Capability[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   init?: (runtime: any) => Promise<void>;
   execute: (action: string, context: AgentContext) => Promise<PluginResult>;
@@ -54,6 +61,7 @@ export interface Plugin {
 export abstract class PluginBase implements Plugin {
   private executorImplementations: ExecutorImplementation[] = [];
   private triggerImplementations: Trigger[] = [];
+  private capabilityList: Capability[] = [];
   public runtime!: Runtime;
   public readonly id: string;
   public readonly name: string;
@@ -80,12 +88,20 @@ export abstract class PluginBase implements Plugin {
     return this.triggerImplementations;
   }
 
+  get capabilities(): Capability[] {
+    return this.capabilityList;
+  }
+
   public addExecutor(executor: ExecutorImplementation) {
     this.executorImplementations.push(executor);
   }
 
   public addTrigger(trigger: Trigger) {
     this.triggerImplementations.push(trigger);
+  }
+
+  public addCapability(capability: Capability) {
+    this.capabilityList.push(capability);
   }
 
   async execute(action: string, context: AgentContext): Promise<PluginResult> {

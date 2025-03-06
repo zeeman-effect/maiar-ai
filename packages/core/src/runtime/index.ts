@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { Plugin } from "../plugin";
 import { PluginRegistry } from "../registry";
 import {
@@ -12,7 +13,7 @@ import {
   PipelineStep,
   Pipeline,
   PipelineGenerationContext,
-  PipelineEvaluationContext,
+  PipelineModificationContext,
   PipelineModification,
   PipelineModificationSchema,
   RuntimeConfig,
@@ -21,18 +22,16 @@ import {
 } from "./types";
 import {
   generatePipelineTemplate,
-  generatePipelineModificationTemplate
+  generatePipelineModificationTemplate,
+  generateObjectTemplate,
+  generateRetryTemplate
 } from "./templates";
-import { getObject } from "../operations/getObject";
-import { getText } from "../operations/getText";
-import { getBoolean } from "../operations/getBoolean";
-import { type GetObjectConfig } from "../operations/getObject";
-import { LLMService } from "../models/service";
+import { ModelService } from "../models/service";
 import { createLogger, logPipelineState } from "../utils/logger";
-import { z } from "zod";
-import { OperationConfig } from "../operations/base";
+import { formatZodSchema, OperationConfig } from "../operations/base";
 import { MemoryService } from "../memory/service";
 import { MonitorService } from "../monitor/service";
+import { ModelRequestConfig } from "../models/base";
 
 const log = createLogger("runtime");
 
@@ -41,32 +40,36 @@ type ContextItemWithHistory = BaseContextItem & {
 };
 
 export function createRuntime(options: RuntimeOptions): Runtime {
-  // Initialize LLM service with the provided model
-  const llmService = new LLMService(options.model);
+  const modelService = new ModelService();
 
-  if (options.model.init) {
-    // Initialize it
-    options.model
-      .init()
+  for (const model of options.models) {
+    // Register the model with the model service
+    modelService.registerModel(model);
+
+    if (model.init) {
+      // Initialize it
+      model
+        .init()
+        .then(() => {
+          log.debug("LLM Model initialized successfully!");
+        })
+        .catch((err) => {
+          log.error("LLM Model failed to initialize", err);
+          throw new Error(err.message);
+        });
+    }
+
+    // Do check if the healthcheck is good before bootstrapping.
+    model
+      .checkHealth()
       .then(() => {
-        log.debug("LLM Model initialized successfully!");
+        log.debug("LLM Model healthcheck passed!");
       })
       .catch((err) => {
-        log.error("LLM Model failed to initialize", err);
+        log.error("LLM Model healthcheck failed", err);
         throw new Error(err.message);
       });
   }
-
-  // Do check if the healthcheck is good before bootstrapping.
-  options.model
-    .checkHealth()
-    .then(() => {
-      log.debug("LLM Model healthcheck passed!");
-    })
-    .catch((err) => {
-      log.error("LLM Model healthcheck failed", err);
-      throw new Error(err.message);
-    });
 
   // Initialize memory service with the provided provider
   const memoryService = new MemoryService(options.memory);
@@ -76,10 +79,109 @@ export function createRuntime(options: RuntimeOptions): Runtime {
 
   return new Runtime({
     plugins: options.plugins,
-    llmService,
+    modelService,
     memoryService,
     monitorService
   });
+}
+
+// Helper to extract valid JSON from a string that might contain code blocks or extra text
+function extractJson(str: string): string {
+  // Remove markdown code blocks
+  str = str.replace(/```(?:\w*\s*)\n?/g, "").replace(/```/g, "");
+
+  // Find the last occurrence of a JSON structure (after any thinking tags)
+  const matches = str.match(/\{[\s\S]*\}|\[[\s\S]*\]/g);
+  if (!matches) {
+    throw new Error("No JSON-like structure found in response");
+  }
+
+  // Return the last match (after any thinking/reasoning)
+  return matches[matches.length - 1] ?? "";
+}
+
+// Helper to clean JSON string before parsing
+function cleanJsonString(str: string): string {
+  // Just trim whitespace - the model should be giving us valid JSON
+  return str.trim();
+}
+
+export interface GetObjectConfig extends OperationConfig {
+  maxRetries?: number;
+}
+
+export async function getObject<T extends z.ZodType>(
+  service: ModelService,
+  schema: T,
+  prompt: string,
+  config?: GetObjectConfig
+): Promise<z.infer<T>> {
+  const maxRetries = config?.maxRetries ?? 3;
+  let lastError: Error | null = null;
+  let lastResponse: string | null = null;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      // Generate the prompt using our template
+      const fullPrompt =
+        attempt === 0
+          ? generateObjectTemplate({
+              schema: formatZodSchema(schema),
+              prompt
+            })
+          : generateRetryTemplate({
+              schema: formatZodSchema(schema),
+              prompt,
+              lastResponse: lastResponse!,
+              error: lastError!.message
+            });
+
+      const response: string = await service.executeCapability(
+        "text-generation",
+        fullPrompt,
+        config
+      );
+      log.debug(`Text generation response: ${response}`);
+      lastResponse = response;
+
+      // Extract JSON from the response, handling code blocks and extra text
+      const jsonString = cleanJsonString(extractJson(response));
+
+      try {
+        const parsed = JSON.parse(jsonString);
+        const result = schema.parse(parsed);
+        if (attempt > 0) {
+          log.info({
+            msg: "Successfully parsed JSON after retries",
+            attempts: attempt + 1
+          });
+        }
+        return result;
+      } catch (parseError) {
+        lastError = parseError as Error;
+        log.warn({
+          msg: `Attempt ${attempt + 1}/${maxRetries} failed`,
+          error: parseError,
+          response: jsonString
+        });
+        if (attempt === maxRetries - 1) throw parseError;
+      }
+    } catch (error) {
+      lastError = error as Error;
+      log.error({
+        msg: `Attempt ${attempt + 1}/${maxRetries} failed`,
+        prompt,
+        schema: schema.description,
+        config,
+        error,
+        lastResponse
+      });
+      if (attempt === maxRetries - 1) throw error;
+    }
+  }
+
+  // This should never happen due to the throw in the loop
+  throw new Error("Failed to get valid response after retries");
 }
 
 /**
@@ -90,7 +192,7 @@ export class Runtime {
   private plugins: Plugin[] = [];
   private eventQueue: AgentContext[] = [];
   private isRunning: boolean = false;
-  private llmService: LLMService;
+  private modelService: ModelService;
   private memoryService: MemoryService;
   private monitorService: MonitorService;
   private currentContext: AgentContext | undefined;
@@ -103,19 +205,20 @@ export class Runtime {
       schema: T,
       prompt: string,
       config?: OperationConfig
-    ) => getObject(this.llmService, schema, prompt, config),
-    getText: (prompt: string, config?: GetObjectConfig) =>
-      getText(this.llmService, prompt, config),
-    getBoolean: (prompt: string, config?: GetObjectConfig) =>
-      getBoolean(this.llmService, prompt, config)
+    ) => getObject(this.modelService, schema, prompt, config),
+    executeCapability: <I, O>(
+      capabilityId: string,
+      input: I,
+      config?: OperationConfig,
+      modelId?: string
+    ) =>
+      this.modelService.executeCapability<I, O>(
+        capabilityId,
+        input,
+        config,
+        modelId
+      )
   };
-
-  /**
-   * Access to the LLM service for plugins
-   */
-  public get llm(): LLMService {
-    return this.llmService;
-  }
 
   /**
    * Access to the memory service for plugins
@@ -259,7 +362,7 @@ export class Runtime {
 
   constructor(config: RuntimeConfig) {
     this.registry = new PluginRegistry();
-    this.llmService = config.llmService;
+    this.modelService = config.modelService;
     this.plugins = config.plugins || [];
     this.memoryService = config.memoryService;
     this.monitorService = config.monitorService;
@@ -273,6 +376,26 @@ export class Runtime {
           plugins: this.plugins.map((p) => p.id)
         }
       });
+    }
+  }
+
+  private async validatePluginCapabilities(plugin: Plugin): Promise<void> {
+    for (const capability of plugin.capabilities) {
+      if (
+        capability.required &&
+        !this.modelService.hasCapability(capability.id)
+      ) {
+        throw new Error(
+          `Plugin ${plugin.id} requires capability ${capability.id} but it is not available`
+        );
+      } else if (
+        !capability.required &&
+        !this.modelService.hasCapability(capability.id)
+      ) {
+        log.warn(
+          `Plugin ${plugin.id} specified an optional capability ${capability.id} that is not available`
+        );
+      }
     }
   }
 
@@ -313,9 +436,29 @@ export class Runtime {
       return;
     }
 
+    // validate required capabilities exist for core runtime operations
+    const requiredCapabilities = ["text-generation"];
+    for (const capability of requiredCapabilities) {
+      if (!this.modelService.hasCapability(capability)) {
+        throw new Error(
+          `${capability} capability is required for core runtime operations`
+        );
+      }
+    }
+
+    log.info({
+      msg: "Runtime validated required capabilities",
+      capabilities: this.modelService.getAvailableCapabilities()
+    });
+
     // Initialize plugins
     for (const plugin of this.plugins) {
       await this.registerPlugin(plugin);
+    }
+
+    // Validate all plugins have required capabilities
+    for (const plugin of this.plugins) {
+      await this.validatePluginCapabilities(plugin);
     }
 
     // Print registered plugins after they're all registered
@@ -428,7 +571,7 @@ export class Runtime {
   private async runEvaluationLoop(): Promise<void> {
     log.info("Starting evaluation loop");
     while (this.isRunning) {
-      const context = await this.eventQueue.shift();
+      const context = this.eventQueue.shift();
       if (!context) {
         await new Promise((resolve) => setTimeout(resolve, 100)); // Sleep to prevent busy loop
         continue;
@@ -447,9 +590,23 @@ export class Runtime {
       try {
         // Set current context before pipeline
         this.currentContext = context;
+        const pipelineContext: PipelineGenerationContext = {
+          contextChain: context.contextChain,
+          availablePlugins: this.getPlugins(),
+          currentContext: {
+            platform: userInput!.pluginId,
+            message: userInput!.rawMessage,
+            conversationHistory: userInput
+              ? await this.memoryService.getRecentConversationHistory(
+                  userInput.user,
+                  userInput.pluginId
+                )
+              : []
+          }
+        };
 
         log.debug("Evaluating pipeline for context");
-        const pipeline = await this.evaluatePipeline(context);
+        const pipeline = await this.evaluatePipeline(pipelineContext);
         log.info("Generated pipeline", { pipeline });
 
         log.debug("Executing pipeline");
@@ -469,18 +626,28 @@ export class Runtime {
           const lastContext = context.contextChain[
             context.contextChain.length - 1
           ] as BaseContextItem & { message: string };
-          log.info({
-            msg: "Storing assistant response in memory",
-            user: userInput.user,
-            platform: userInput.pluginId,
-            response: lastContext.message
-          });
-          await this.memoryService.storeAssistantInteraction(
-            userInput.user,
-            userInput.pluginId,
-            lastContext.message,
-            context.contextChain
-          );
+
+          // Only store if message exists
+          if (lastContext && lastContext.message) {
+            log.info({
+              msg: "Storing assistant response in memory",
+              user: userInput.user,
+              platform: userInput.pluginId,
+              response: lastContext.message
+            });
+            await this.memoryService.storeAssistantInteraction(
+              userInput.user,
+              userInput.pluginId,
+              lastContext.message,
+              context.contextChain
+            );
+          } else {
+            log.warn({
+              msg: "No valid assistant message to store",
+              user: userInput.user,
+              platform: userInput.pluginId
+            });
+          }
         }
 
         log.info("Pipeline execution complete");
@@ -571,13 +738,9 @@ export class Runtime {
         contextChain: context.contextChain
       });
 
-      const pipeline = await getObject(
-        this.llmService,
+      const pipeline = await this.operations.getObject(
         PipelineSchema,
-        template,
-        {
-          temperature: 0.2 // Lower temperature for more predictable outputs
-        }
+        template
       );
 
       // Add concise pipeline steps log
@@ -598,9 +761,10 @@ export class Runtime {
       });
 
       log.info({
-        msg: "Generated pipeline",
-        pipeline
+        msg: "Pipeline evaluation result",
+        steps: pipeline.map((s) => s.pluginId + ":" + s.action)
       });
+
       return pipeline;
     } catch (error) {
       // Log pipeline generation error
@@ -623,29 +787,15 @@ export class Runtime {
       });
 
       log.error({
-        msg: "Error generating pipeline",
-        error:
-          error instanceof Error
-            ? {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-              }
-            : error,
-        context: {
-          platform: userInput?.pluginId || "unknown",
-          message: userInput?.rawMessage || "",
-          contextChain: context.contextChain,
-          generationContext: pipelineContext,
-          template: generatePipelineTemplate(pipelineContext)
-        }
+        msg: "Error evaluating pipeline",
+        error: error instanceof Error ? error : new Error(String(error))
       });
-      return []; // Return empty pipeline on error
+      return [];
     }
   }
 
   private async evaluatePipelineModification(
-    context: PipelineEvaluationContext
+    context: PipelineModificationContext
   ): Promise<PipelineModification> {
     const template = generatePipelineModificationTemplate(context);
     log.debug({
@@ -655,9 +805,15 @@ export class Runtime {
     });
 
     try {
-      const modification = await this.operations.getObject(
-        PipelineModificationSchema,
-        template,
+      const modification = await this.modelService.executeCapability<
+        { schema: typeof PipelineModificationSchema; prompt: string },
+        PipelineModification
+      >(
+        "text-generation",
+        {
+          schema: PipelineModificationSchema,
+          prompt: template
+        },
         {
           temperature: 0.2 // Lower temperature for more predictable outputs
         }
@@ -901,6 +1057,14 @@ export class Runtime {
         }
       });
     }
+  }
+
+  public async executeCapability<I = unknown, O = unknown>(
+    id: string,
+    input: I,
+    config?: ModelRequestConfig
+  ): Promise<O> {
+    return this.modelService.executeCapability(id, input, config);
   }
 }
 
