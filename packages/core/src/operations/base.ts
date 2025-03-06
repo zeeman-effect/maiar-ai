@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ModelRequestConfig } from "../models/base";
-import { ModelProvider } from "../models/service";
+import { ModelProvider } from "../models/base";
 
 export interface OperationConfig extends ModelRequestConfig {
   model?: ModelProvider;

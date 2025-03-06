@@ -5,7 +5,6 @@ import {
   BaseContextItem,
   getUserInput
 } from "@maiar-ai/core";
-import { TextGenerationSchema } from "./types";
 import { generateTextTemplate } from "./templates";
 
 export class PluginTextGeneration extends PluginBase {
@@ -28,10 +27,12 @@ export class PluginTextGeneration extends PluginBase {
           };
         }
 
-        const generated = await this.runtime.operations.getObject(
-          TextGenerationSchema,
+        const generated: string = await this.runtime.executeCapability(
+          "text-generation",
           generateTextTemplate(userInput.rawMessage, context.contextChain),
-          { temperature: 0.7 }
+          {
+            temperature: 0.7
+          }
         );
 
         // Add the generated text as a new item in the context chain
@@ -42,9 +43,9 @@ export class PluginTextGeneration extends PluginBase {
           pluginId: this.id,
           type: "generated_text",
           action: "generate_text",
-          content: generated.text,
+          content: generated,
           timestamp: Date.now(),
-          text: generated.text
+          text: generated
         };
 
         context.contextChain.push(textContext);

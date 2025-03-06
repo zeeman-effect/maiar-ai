@@ -1,4 +1,4 @@
-import { ModelProvider, ModelRequestConfig } from "@maiar-ai/core";
+import { ModelProviderBase, ModelRequestConfig } from "@maiar-ai/core";
 import { createLogger } from "@maiar-ai/core";
 import { verifyBasicHealth } from "./index";
 
@@ -9,15 +9,12 @@ export interface OllamaConfig {
   model: string;
 }
 
-export class OllamaProvider implements ModelProvider {
-  readonly id = "ollama";
-  readonly name = "Ollama";
-  readonly description = "Local Ollama models like Llama 2 and Mistral";
-
+export class OllamaProvider extends ModelProviderBase {
   private baseUrl: string;
   private model: string;
 
   constructor(config: OllamaConfig) {
+    super("ollama", "Ollama", "Local Ollama models like Llama 2 and Mistral");
     if (!config.baseUrl) {
       throw new Error("baseUrl is required");
     }
@@ -27,9 +24,19 @@ export class OllamaProvider implements ModelProvider {
 
     this.baseUrl = config.baseUrl.replace(/\/$/, "");
     this.model = config.model;
+    this.addCapability({
+      id: "text-generation",
+      name: "Generate text",
+      description:
+        "Generate text using ollama model. Takes text and input and returns text",
+      execute: this.generateText.bind(this)
+    });
   }
 
-  async getText(prompt: string, config?: ModelRequestConfig): Promise<string> {
+  async generateText(
+    prompt: string,
+    config?: ModelRequestConfig
+  ): Promise<string> {
     try {
       const response = await fetch(`${this.baseUrl}/api/generate`, {
         method: "POST",
