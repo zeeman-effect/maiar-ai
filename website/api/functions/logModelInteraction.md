@@ -12,7 +12,7 @@ Log model interactions to a separate file
 
 ### type
 
-`"prompt"` | `"response"` | `"error"`
+`"error"` | `"response"` | `"prompt"`
 
 ### data
 

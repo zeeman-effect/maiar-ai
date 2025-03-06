@@ -1,10 +1,11 @@
-# @maiar-ai/core v0.9.0
+# @maiar-ai/core v0.10.0
 
 ## Classes
 
 - [MemoryService](classes/MemoryService.md)
 - [LoggingModelDecorator](classes/LoggingModelDecorator.md)
 - [LLMService](classes/LLMService.md)
+- [MonitorService](classes/MonitorService.md)
 - [PluginBase](classes/PluginBase.md)
 - [PluginRegistry](classes/PluginRegistry.md)
 - [Runtime](classes/Runtime.md)
@@ -19,6 +20,8 @@
 - [ModelRequestConfig](interfaces/ModelRequestConfig.md)
 - [ModelInterface](interfaces/ModelInterface.md)
 - [ModelProvider](interfaces/ModelProvider.md)
+- [AgentState](interfaces/AgentState.md)
+- [MonitorProvider](interfaces/MonitorProvider.md)
 - [PluginResult](interfaces/PluginResult.md)
 - [Executor](interfaces/Executor.md)
 - [ExecutorImplementation](interfaces/ExecutorImplementation.md)
