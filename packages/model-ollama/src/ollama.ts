@@ -26,7 +26,7 @@ export class OllamaProvider extends ModelProviderBase {
     this.model = config.model;
     this.addCapability({
       id: "text-generation",
-      name: "Generate text",
+      name: "Text generation capability",
       description:
         "Generate text using ollama model. Takes text and input and returns text",
       execute: this.generateText.bind(this)
