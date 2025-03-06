@@ -34,6 +34,9 @@ export interface Trigger {
   start: (context: AgentContext) => void;
 }
 
+/**
+ * Plugin capability that can be used in plugin executors
+ */
 export interface Capability {
   id: string;
   description: string;
@@ -41,7 +44,7 @@ export interface Capability {
 }
 
 /**
- * Base plugin interface that all plugins must implement
+ * Plugin interface that all plugins must implement
  */
 export interface Plugin {
   id: string;

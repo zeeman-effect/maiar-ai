@@ -1,16 +1,13 @@
 import { OperationConfig } from "../operations/base";
 
 /**
- * Interface for model capabilities
+ * Interface that model capabilities must implement
  */
 export interface ModelCapability<InputType = unknown, OutputType = unknown> {
   readonly id: string;
   readonly name: string;
   readonly description: string;
 
-  /**
-   * Execute the capability with the given input
-   */
   execute(input: InputType, config?: OperationConfig): Promise<OutputType>;
 }
 

@@ -13,7 +13,7 @@ export type CapabilityFactory<I, O> = (
 ) => ModelCapability<I, O>;
 
 /**
- * Service for managing model operations
+ * Service for managing operations on models
  */
 export class ModelService {
   private models = new Map<string, ModelProvider>();
@@ -91,11 +91,11 @@ export class ModelService {
     config?: OperationConfig,
     modelId?: string
   ): Promise<O> {
-    // Resolve alias if it exists
+    // Resolve the canonical capability ID
     const resolvedCapabilityId =
       this.capabilityAliases.get(capabilityId) || capabilityId;
 
-    // Determine which model to use
+    // Get the effective model to use
     const effectiveModelId =
       modelId ||
       this.registry.getDefaultModelForCapability(resolvedCapabilityId);
