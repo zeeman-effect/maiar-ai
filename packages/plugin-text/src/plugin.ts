@@ -27,7 +27,7 @@ export class PluginTextGeneration extends PluginBase {
           };
         }
 
-        const generated: string = await this.runtime.executeCapability(
+        const generated = await this.runtime.executeCapability<string, string>(
           "text-generation",
           generateTextTemplate(userInput.rawMessage, context.contextChain),
           {

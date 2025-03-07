@@ -45,7 +45,7 @@ export interface RuntimeOptions {
   memory: MemoryProvider;
   plugins: Plugin[];
   monitor?: MonitorProvider[];
-  capabilityAliases?: Record<string, string>;
+  capabilityAliases?: string[][];
 }
 
 interface PluginExecutor {
@@ -73,8 +73,8 @@ export interface PipelineGenerationContext {
   contextChain: BaseContextItem[];
   availablePlugins: AvailablePlugin[];
   currentContext: {
-    platform: string | undefined;
-    message: string | undefined;
+    platform: string;
+    message: string;
     conversationHistory: ConversationMessage[];
   };
 }

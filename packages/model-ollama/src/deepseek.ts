@@ -17,6 +17,9 @@ High level rules you must follow:
 `;
 
 export class DeepseekProvider extends ModelProviderBase {
+  readonly id = "deepseek";
+  readonly name = "Deepseek";
+  readonly description = "Deepseek models running through Ollama";
   private baseUrl: string;
   private model: string;
 

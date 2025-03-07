@@ -35,7 +35,7 @@ export interface Trigger {
 }
 
 /**
- * Plugin capability that can be used in plugin executors
+ * Capability from model service required by plugin
  */
 export interface Capability {
   id: string;

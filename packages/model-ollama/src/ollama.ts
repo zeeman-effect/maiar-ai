@@ -10,6 +10,9 @@ export interface OllamaConfig {
 }
 
 export class OllamaProvider extends ModelProviderBase {
+  readonly id = "ollama";
+  readonly name = "Ollama";
+  readonly description = "Local Ollama models like Llama 2 and Mistral";
   private baseUrl: string;
   private model: string;
 

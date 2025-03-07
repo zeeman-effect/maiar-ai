@@ -7,7 +7,7 @@
     "dev": "chokidar '../.build-complete' 'src/**/*.ts' --initial --verbose -c 'pnpm build && pnpm run restart'",
     "restart": "node ../restart.js",
     "build": "tsc --project tsconfig.json",
-    "clean": "rm -rf dist data logs",
+    "clean": "rm -rf data",
     "start": "node dist/index.js"
   },
   "dependencies": {

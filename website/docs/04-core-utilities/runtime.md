@@ -45,7 +45,7 @@ The runtime maintinas a registry of all configured models and their capabilities
 
 ```typescript
 // Capabilities are accessed through the runtime.operations
-const output = this.runtime.operations.executeCapability(
+const output = this.runtime.operations.executeCapability<string, string>(
   "text-generation",
   prompt,
   config
@@ -123,7 +123,7 @@ const location = await runtime.operations.getObject(
 Perform operation defined by model capability:
 
 ```typescript
-const image = await runtime.operations.executeCapability(
+const image = await runtime.operations.executeCapability<string, Image>(
   "generate-image",
   prompt,
   config
