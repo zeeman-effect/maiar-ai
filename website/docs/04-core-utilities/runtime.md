@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Runtime
 
-The Runtime is the core building block of Maiar's plugin system. It manages the execution of plugins, handles the event queue, and provides essential operations for plugins to interact with the LLM and memory services.
+The Runtime is the core building block of Maiar's plugin system. It manages the execution of plugins, handles the event queue, and provides essential operations for plugins to interact with the model and memory services.
 
 ## Creating a Runtime
 
@@ -15,7 +15,7 @@ import { createRuntime } from "@maiar-ai/core";
 import { ModelProvider } from "@maiar-ai/model-ollama";
 
 const runtime = createRuntime({
-  model: ModelProvider.DeepSeek,
+  models: [ModelProvider.DeepSeek],
   memory: new SQLiteMemoryProvider(),
   plugins: [
     /* your plugins here */
@@ -39,17 +39,17 @@ await runtime.registerPlugin(new MyCustomPlugin());
 const plugins = runtime.getPlugins();
 ```
 
-### 2. LLM Service
+### 2. Model Service
 
-The runtime provides access to the Language Model service through its operations:
+The runtime maintinas a registry of all configured models and their capabilities:
 
 ```typescript
-// Available through runtime.operations
-const operations = {
-  getText: (prompt: string, config?) => string,
-  getObject: <T>(schema: ZodType<T>, prompt: string, config?) => T,
-  getBoolean: (prompt: string, config?) => boolean
-};
+// Capabilities are accessed through the runtime.operations
+const output = this.runtime.operations.executeCapability(
+  "text-generation",
+  prompt,
+  config
+);
 ```
 
 ### 3. Memory Service
@@ -99,18 +99,7 @@ runtime.pushToContextChain({
 
 ## Plugin Operations
 
-The runtime provides three core operations that plugins can use:
-
-### getText
-
-Get raw text completion from the LLM:
-
-```typescript
-const response = await runtime.operations.getText(
-  "What is the capital of France?",
-  { temperature: 0.7 }
-);
-```
+The runtime provides one core operation plugins can use:
 
 ### getObject
 
@@ -129,14 +118,15 @@ const location = await runtime.operations.getObject(
 );
 ```
 
-### getBoolean
+### executeCapability
 
-Get boolean decisions from the LLM:
+Perform operation defined by model capability:
 
 ```typescript
-const isQuestion = await runtime.operations.getBoolean(
-  "Is this a question: 'What time is it?'",
-  { temperature: 0.1 }
+const image = await runtime.operations.executeCapability(
+  "generate-image",
+  prompt,
+  config
 );
 ```
 
@@ -170,8 +160,8 @@ try {
 3. **Operations**
 
    - Use appropriate temperature settings for different tasks
-   - Provide clear prompts for LLM operations
-   - Handle operation errors gracefully
+   - Provide clear prompts for model capabilities
+   - Handle capability errors gracefully
 
 4. **Event Queue**
    - Monitor queue length to prevent memory issues
@@ -193,7 +183,7 @@ async function main() {
   try {
     // Create runtime with multiple plugins
     const runtime = createRuntime({
-      model: ModelProvider.DeepSeek,
+      models: [ModelProvider.DeepSeek],
       memory: new SQLiteMemoryProvider({
         path: "./memory.db"
       }),
@@ -222,5 +212,5 @@ main();
 
 - Learn about [createEvent](./createEvent) for event handling
 - Explore [Building Plugins](../building-plugins/philosophy) for using getObject in plugins
-- Check out [Model Providers](../model-providers/overview) for LLM configuration
+- Check out [Model Providers](../model-providers/overview) for model configuration
 - Read about [Executors](../building-plugins/executors) for practical usage examples

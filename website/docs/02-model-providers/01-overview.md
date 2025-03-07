@@ -6,16 +6,57 @@ sidebar_position: 1
 
 # Models in Maiar
 
-Maiar's model system provides a simple interface for integrating any Language Model (LLM) into your agent. The framework comes with providers for popular services like OpenAI and Ollama, but its true power lies in its extensibility.
+Maiar's model system provides a simple interface for integrating any model into your agent. The framework comes with providers for popular services like OpenAI and Ollama, but its true power lies in its extensibility.
 
 ## The Model Provider System
 
-At its core, a model provider in Maiar is just a way to get text from an LLM. The interface is intentionally minimal:
+At its core, a model provider is a wrapper around a models capabilities:
 
 ```typescript
 interface ModelProvider {
+  readonly id: string;
+  readonly name: string;
+  readonly description: string;
+  readonly capabilities: Map<string, ModelCapability>;
+
+  /**
+   * Add a capability to the model
+   */
+  addCapability(capability: ModelCapability): void;
+
+  /**
+   * Get all capabilities supported by this model
+   */
+  getCapabilities(): ModelCapability[];
+
+  /**
+   * Check if the model supports a specific capability
+   */
+  hasCapability(capabilityId: string): boolean;
+
+  /**
+   * Get a specific capability instance
+   */
+  getCapability<I, O>(capabilityId: string): ModelCapability<I, O> | undefined;
+
+  /**
+   * Execute a capability
+   */
+  executeCapability<I, O>(
+    capabilityId: string,
+    input: I,
+    config?: ModelRequestConfig
+  ): Promise<O>;
+
+  /**
+   * Initialize the model with any necessary setup
+   */
   init?(): Promise<void>;
-  getText(prompt: string, config?: ModelRequestConfig): Promise<string>;
+
+  /**
+   * Check model health
+   */
+  checkHealth(): Promise<void>;
 }
 
 interface ModelRequestConfig {
@@ -79,9 +120,19 @@ export class DeepseekProvider implements ModelProvider {
 
     this.baseUrl = config.baseUrl.replace(/\/$/, "");
     this.model = config.model;
+
+    this.addCapability({
+      id: "text-generation",
+      name: "Text generation capability",
+      description: "Deepseek models running through Ollama",
+      execute: this.generateText.bind(this)
+    });
   }
 
-  async getText(prompt: string, config?: ModelRequestConfig): Promise<string> {
+  async generateText(
+    prompt: string,
+    config?: ModelRequestConfig
+  ): Promise<string> {
     try {
       log.info("Sending prompt to Deepseek:", prompt);
 
@@ -128,10 +179,12 @@ Now when we use this provider:
 
 ```typescript
 const runtime = createRuntime({
-  model: new DeepseekProvider({
-    baseUrl: "http://localhost:11434",
-    model: "deepseek-coder:6.7b"
-  })
+  models: [
+    new DeepseekProvider({
+      baseUrl: "http://localhost:11434",
+      model: "deepseek-coder:6.7b"
+    })
+  ]
 });
 
 const answer = await runtime.model.getText("What's 2+2?");
@@ -150,10 +203,12 @@ Maiar maintains several official providers:
 import { OpenAIProvider } from "@maiar-ai/model-openai";
 
 const runtime = createRuntime({
-  model: new OpenAIProvider({
-    apiKey: process.env.OPENAI_API_KEY,
-    model: "gpt-3.5-turbo"
-  })
+  models: [
+    new OpenAIProvider({
+      apiKey: process.env.OPENAI_API_KEY,
+      model: "gpt-3.5-turbo"
+    })
+  ]
 });
 ```
 
@@ -163,9 +218,11 @@ const runtime = createRuntime({
 import { OllamaProvider } from "@maiar-ai/model-ollama";
 
 const runtime = createRuntime({
-  model: new OllamaProvider({
-    baseUrl: "http://localhost:11434",
-    model: "llama2"
-  })
+  models: [
+    new OllamaProvider({
+      baseUrl: "http://localhost:11434",
+      model: "llama2"
+    })
+  ]
 });
 ```

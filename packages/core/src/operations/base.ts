@@ -14,7 +14,7 @@ export interface TemplateFunction<T = unknown> {
 }
 
 /**
- * Formats a Zod schema into a human-readable format for the LLM
+ * Formats a Zod schema into a human-readable format for the model
  */
 export function formatZodSchema<T>(schema: z.ZodType<T>): string {
   const description = schema.description || "";

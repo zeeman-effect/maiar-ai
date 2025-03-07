@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # getObject
 
-`getObject` is a powerful utility in Maiar that enables structured data extraction from LLM responses using Zod schemas. It's particularly useful when you need to extract specific data structures from natural language or convert unstructured text into typed objects.
+`getObject` is a powerful utility in Maiar that enables structured data extraction from model text responses using Zod schemas. It's particularly useful when you need to extract specific data structures from natural language or convert unstructured text into typed objects.
 
 ## Basic Usage
 
@@ -31,7 +31,7 @@ const location = await runtime.operations.getObject(
 
 1. **Schema Definition**: You define a Zod schema that describes the structure and types of data you want to extract.
 2. **Prompt Generation**: The utility generates a specialized prompt that includes the schema description.
-3. **LLM Processing**: The LLM processes the prompt and returns a JSON response.
+3. **Model Processing**: The model processes the prompt and returns a JSON response.
 4. **Validation**: The response is validated against your schema to ensure type safety.
 5. **Retries**: If validation fails, the utility automatically retries with more specific instructions.
 
@@ -39,7 +39,7 @@ const location = await runtime.operations.getObject(
 
 ### Schema Descriptions
 
-Use schema descriptions to guide the LLM:
+Use schema descriptions to guide the model:
 
 ```typescript
 const UserSchema = z.object({
@@ -223,6 +223,6 @@ async function extractArticleData(runtime: Runtime, text: string) {
 
 - Learn about [createEvent](./createEvent) for event handling
 - Explore [Building Plugins](../building-plugins/philosophy) for using getObject in plugins
-- Check out [Model Providers](../model-providers/overview) for LLM configuration
+- Check out [Model Providers](../model-providers/overview) for model configuration
 - See [Runtime](./runtime.md) for the complete operations API
 - Read about [Executors](../building-plugins/executors) for practical usage examples

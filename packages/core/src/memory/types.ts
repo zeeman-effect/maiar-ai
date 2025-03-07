@@ -10,7 +10,7 @@ export interface Message {
 export interface Context {
   id: string;
   type: string;
-  content: string; // Serialized content for LLM consumption
+  content: string; // Serialized content for model consumption
   timestamp: number;
   user_message_id?: string;
   agent_message_id?: string;
