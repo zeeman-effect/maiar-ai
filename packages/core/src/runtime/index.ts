@@ -72,6 +72,24 @@ export function createRuntime(options: RuntimeOptions): Runtime {
       });
   }
 
+  // Register capability aliases if provided
+  if (options.capabilityAliases && options.capabilityAliases.length > 0) {
+    for (const aliasGroup of options.capabilityAliases) {
+      if (aliasGroup.length > 0) {
+        const canonicalId =
+          aliasGroup.find((id) => modelService.hasCapability(id)) ??
+          (aliasGroup[0] as string);
+
+        // Register all other IDs in the group as aliases to the canonical ID
+        for (const alias of aliasGroup) {
+          if (alias !== canonicalId) {
+            modelService.registerCapabilityAlias(alias, canonicalId);
+          }
+        }
+      }
+    }
+  }
+
   // Initialize memory service with configured memory provider
   const memoryService = new MemoryService(options.memory);
 
@@ -124,7 +142,7 @@ export async function getObject<T extends z.ZodType>(
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       // Generate prompt using template
-      const fullPrompt =
+      const fullPrompt: string =
         attempt === 0
           ? generateObjectTemplate({
               schema: formatZodSchema(schema),
@@ -136,7 +154,7 @@ export async function getObject<T extends z.ZodType>(
               lastResponse: lastResponse!,
               error: lastError!.message
             });
-      const response: string = await service.executeCapability(
+      const response = await service.executeCapability<string, string>(
         "text-generation",
         fullPrompt,
         config
@@ -1052,7 +1070,7 @@ export class Runtime {
     input: I,
     config?: ModelRequestConfig
   ): Promise<O> {
-    return this.modelService.executeCapability(id, input, config);
+    return this.modelService.executeCapability<I, O>(id, input, config);
   }
 }
 
