@@ -6,7 +6,7 @@ Maiar is designed around the **thesis** that AI agents, in their current iterati
 2. **Decision-Making** – How the AI determines the appropriate action.
 3. **Action Execution** – Carrying out the selected operation.
 
-Instead of rigid workflows or monolithic agent logic, Maiar abstracts these steps into a **modular, plugin-based system**. Developers define **triggers** and **actions** as standalone plugins, while the core runtime dynamically handles decision-making. This enables a highly extensible, composable, and LLM-driven framework where new functionality can be added seamlessly.
+Instead of rigid workflows or monolithic agent logic, Maiar abstracts these steps into a **modular, plugin-based system**. Developers define **triggers** and **actions** as standalone plugins, while the core runtime dynamically handles decision-making. This enables a highly extensible, composable, and model driven framework where new functionality can be added seamlessly.
 
 You can read about how to use the core library in the [API Documentation](https://maiar.dev/api).
 
@@ -15,7 +15,7 @@ You can read about how to use the core library in the [API Documentation](https:
 At its core, Maiar builds execution pipelines dynamically. When an event or request is received, the runtime:
 
 1. **Processes triggers** to determine when and how the AI should act.
-2. **Uses LLM-assisted reasoning** to construct an execution pipeline.
+2. **Uses model based reasoning** to construct an execution pipeline.
 3. **Runs plugins in sequence**, modifying a structured **context chain** as it progresses.
 
 Rather than hardcoding client logic, Maiar produces **emergent behavior** by selecting the most relevant plugins and actions based on context. This enables adaptability and ensures that agents can evolve without rewriting core logic.
@@ -41,7 +41,7 @@ This design enables Maiar to remain **declarative** and **extensible**, allowing
 Maiar is intentionally **unopinionated** about external dependencies, ensuring developers have full control over their infrastructure. The framework avoids enforcing specific technologies, making it easy to integrate with:
 
 - **Database Adapters** – Works with any database system.
-- **LLM Providers** – Supports OpenAI, local models, or custom integrations.
+- **Model Providers** – Supports OpenAI, local models, or custom integrations.
 - **Logging & Monitoring** – Custom logging systems can be plugged in without modifying core logic.
 - **Future Expansions** – As needs evolve, new capabilities can be added without disrupting existing workflows.
 
@@ -51,7 +51,7 @@ By maintaining a **flexible core**, Maiar ensures that AI agents can adapt to di
 
 - **Plugin-First** – Every capability, from event ingestion to action execution, is encapsulated in a plugin.
 - **Modular & Composable** – No rigid loops, no hardcoded workflows. The agent dynamically assembles execution pipelines.
-- **LLM-Driven Behavior** – Instead of pre-defined workflows, the AI evaluates its available tools and selects the best course of action.
+- **Model-Driven Behavior** – Instead of pre-defined workflows, the AI evaluates its available tools and selects the best course of action.
 - **Declarative Plugin Interface** – Plugins declare their triggers and actions, while the runtime orchestrates them.
 - **Pipes & Context Chains** – Input flows through plugins in a structured sequence, mirroring Unix pipes.
 - **Extensibility & Flexibility** – The core library avoids enforcing specific tools or integrations. It's designed around interfaces and providers that allow you to plug in your own tools and integrations.

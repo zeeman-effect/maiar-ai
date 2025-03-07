@@ -141,7 +141,7 @@ interface PluginResult<T = any> {
 }
 ```
 
-The `helpfulInstruction` field is particularly important as it co-locates data with guidance for the LLM. For example:
+The `helpfulInstruction` field is particularly important as it co-locates data with guidance for the model. For example:
 
 ```typescript
 return {
@@ -156,12 +156,12 @@ return {
 
 This approach:
 
-- Ensures the LLM understands how to use the data correctly
+- Ensures the model understands how to use the data correctly
 - Prevents common mistakes (like using placeholders)
 - Provides context about data accessibility and usage
-- Guides the LLM in maintaining data integrity
+- Guides the model in maintaining data integrity
 
-You can think of helpful instructions as programmer-written notes that help the LLM understand and use the data appropriately in its responses.
+You can think of helpful instructions as programmer-written notes that help the model understand and use the data appropriately in its responses.
 
 ## Best Practices
 
@@ -357,6 +357,4 @@ This example demonstrates:
 - Explore [getObject](../core-utilities/getObject) for data extraction
 - See [Runtime](../core-utilities/runtime) for the complete plugin API
 - Check out [Plugin Philosophy](./philosophy) for architectural overview
-- Read about [Model Providers](../model-providers/overview) for LLM integration
-
-:::
+- Read about [Model Providers](../model-providers/overview) for model integration

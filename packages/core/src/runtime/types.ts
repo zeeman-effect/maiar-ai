@@ -102,7 +102,7 @@ export interface PipelineModificationContext {
 }
 
 /**
- * Schema for pipeline modification results from LLM
+ * Schema for pipeline modification results from model
  */
 export const PipelineModificationSchema = z
   .object({
