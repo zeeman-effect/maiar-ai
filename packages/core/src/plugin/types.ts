@@ -7,7 +7,7 @@ import { Runtime } from "../runtime";
 export interface PluginResult {
   success: boolean;
   error?: string;
-  data?: unknown; // Plugin-specific data that will be serialized for LLM
+  data?: unknown; // Plugin-specific data that will be serialized for model
 }
 
 /**

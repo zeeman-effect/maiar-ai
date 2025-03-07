@@ -3,8 +3,8 @@ export interface BaseContextItem {
   id: string; // Unique identifier for this context item
   pluginId: string; // Which plugin created this context
   action: string; // What action/executor was used
-  type: string; // Type of context item for LLM understanding
-  content: string; // Serialized content for LLM consumption
+  type: string; // Type of context item for model understanding
+  content: string; // Serialized content for model consumption
   timestamp: number; // When this context was added
   helpfulInstruction?: string; // Instructions for how to use this context item's data
 }

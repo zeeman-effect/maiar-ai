@@ -692,7 +692,7 @@ export class Runtime {
     };
 
     try {
-      // Generate the pipeline using LLM
+      // Generate the pipeline using model
       const template = generatePipelineTemplate(pipelineContext);
 
       // Log pipeline generation start
@@ -712,7 +712,7 @@ export class Runtime {
         template,
         contextChain: context.contextChain
       });
-      
+
       const pipeline = await this.operations.getObject(
         PipelineSchema,
         template,
@@ -720,7 +720,7 @@ export class Runtime {
           temperature: 0.2 // Lower temperature for more predictable outputs
         }
       );
-      
+
       // Add concise pipeline steps log
       const steps = pipeline.map((step) => `${step.pluginId}:${step.action}`);
       log.info("Pipeline steps:", steps);
