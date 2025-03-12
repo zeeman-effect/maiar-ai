@@ -1,8 +1,15 @@
+import { z } from "zod";
 import { ModelProviderBase, ModelRequestConfig } from "@maiar-ai/core";
 import { createLogger } from "@maiar-ai/core";
 import { verifyBasicHealth } from "./index";
 
 const log = createLogger("models");
+
+// Define capability schemas
+export const textGenerationSchema = {
+  input: z.union([z.string(), z.array(z.string())]),
+  output: z.string()
+};
 
 export interface DeepseekConfig {
   baseUrl: string;
@@ -38,6 +45,8 @@ export class DeepseekProvider extends ModelProviderBase {
       id: "text-generation",
       name: "Text generation capability",
       description: "Deepseek models running through Ollama",
+      input: textGenerationSchema.input,
+      output: textGenerationSchema.output,
       execute: this.generateText.bind(this)
     });
   }

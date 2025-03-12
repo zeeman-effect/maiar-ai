@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { ModelProviderBase, ModelRequestConfig } from "@maiar-ai/core";
 import { createLogger } from "@maiar-ai/core";
 import { verifyBasicHealth } from "./index";
@@ -8,6 +9,12 @@ export interface OllamaConfig {
   baseUrl: string;
   model: string;
 }
+
+// Define capability schemas
+export const textGenerationSchema = {
+  input: z.union([z.string(), z.array(z.string())]),
+  output: z.string()
+};
 
 export class OllamaProvider extends ModelProviderBase {
   readonly id = "ollama";
@@ -32,6 +39,8 @@ export class OllamaProvider extends ModelProviderBase {
       name: "Text generation capability",
       description:
         "Generate text using ollama model. Takes text and input and returns text",
+      input: textGenerationSchema.input,
+      output: textGenerationSchema.output,
       execute: this.generateText.bind(this)
     });
   }

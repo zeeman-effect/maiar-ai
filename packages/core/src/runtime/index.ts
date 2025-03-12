@@ -837,7 +837,8 @@ export class Runtime {
       });
       return {
         shouldModify: false,
-        explanation: "Error evaluating pipeline modification"
+        explanation: "Error evaluating pipeline modification",
+        modifiedSteps: null
       };
     }
   }

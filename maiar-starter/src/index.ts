@@ -33,6 +33,7 @@ import {
   PluginX
 } from "@maiar-ai/plugin-x";
 
+import { PluginGenImage } from "./plugins/plugin-gen-image";
 import { router } from "./express-app";
 
 // Create and start the agent
@@ -54,6 +55,7 @@ const runtime = createRuntime({
     })
   ],
   plugins: [
+    new PluginGenImage(),
     new PluginExpress({
       port: 3002,
       router
@@ -85,7 +87,8 @@ const runtime = createRuntime({
       customExecutors: [createPostExecutor],
       customTriggers: [periodicPostTrigger]
     })
-  ]
+  ],
+  capabilityAliases: [["image-generation", "generate_image"]]
 });
 
 // Start the runtime if this file is run directly

@@ -64,16 +64,22 @@ export interface Plugin {
 export abstract class PluginBase implements Plugin {
   private executorImplementations: ExecutorImplementation[] = [];
   private triggerImplementations: Trigger[] = [];
-  private capabilityList: Capability[] = [];
   public runtime!: Runtime;
   public readonly id: string;
   public readonly name: string;
   public readonly description: string;
+  public readonly capabilitiesList: Capability[] = [];
 
-  constructor(config: { id: string; name: string; description: string }) {
+  constructor(config: {
+    id: string;
+    name: string;
+    description: string;
+    capabilities?: Capability[];
+  }) {
     this.id = config.id;
     this.name = config.name;
     this.description = config.description;
+    this.capabilitiesList = config.capabilities || [];
   }
 
   async init(runtime: Runtime): Promise<void> {
@@ -92,7 +98,7 @@ export abstract class PluginBase implements Plugin {
   }
 
   get capabilities(): Capability[] {
-    return this.capabilityList;
+    return this.capabilitiesList;
   }
 
   public addExecutor(executor: ExecutorImplementation) {
@@ -104,7 +110,7 @@ export abstract class PluginBase implements Plugin {
   }
 
   public addCapability(capability: Capability) {
-    this.capabilityList.push(capability);
+    this.capabilitiesList.push(capability);
   }
 
   async execute(action: string, context: AgentContext): Promise<PluginResult> {

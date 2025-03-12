@@ -38,7 +38,15 @@ export class ModelService {
     // Apply this factory to all existing models
     for (const [modelId, model] of this.models.entries()) {
       if (model.hasCapability(capabilityId)) {
-        this.registry.registerCapability(modelId, capabilityId);
+        const capability = model.getCapability<I, O>(capabilityId);
+        if (capability) {
+          this.registry.registerCapability({
+            id: capabilityId,
+            input: capability.input,
+            output: capability.output,
+            model: modelId
+          });
+        }
       }
     }
 
@@ -54,7 +62,12 @@ export class ModelService {
     // Register all capabilities provided by the model
     const capabilities = model.getCapabilities();
     for (const capability of capabilities) {
-      this.registry.registerCapability(model.id, capability.id);
+      this.registry.registerCapability({
+        id: capability.id,
+        input: capability.input,
+        output: capability.output,
+        model: model.id
+      });
 
       // Check if this capability already has a default model
       // If not, set this model as the default for this capability
