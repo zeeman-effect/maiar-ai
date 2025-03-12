@@ -32,8 +32,7 @@ import {
   periodicPostTrigger,
   PluginX
 } from "@maiar-ai/plugin-x";
-
-import { PluginGenImage } from "./plugins/plugin-gen-image";
+import { PluginImageGeneration } from "@maiar-ai/plugin-image";
 import { router } from "./express-app";
 
 // Create and start the agent
@@ -55,7 +54,7 @@ const runtime = createRuntime({
     })
   ],
   plugins: [
-    new PluginGenImage(),
+    new PluginImageGeneration(),
     new PluginExpress({
       port: 3002,
       router

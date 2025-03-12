@@ -18,40 +18,9 @@ export type CapabilityFactory<I, O> = (
 export class ModelService {
   private models = new Map<string, ModelProvider>();
   private registry = new CapabilityRegistry();
-  private capabilityFactories = new Map<
-    string,
-    CapabilityFactory<unknown, unknown>
-  >();
   private capabilityAliases = new Map<string, string>();
 
   constructor() {}
-
-  /**
-   * Register a capability factory
-   */
-  registerCapabilityFactory<I, O>(
-    capabilityId: string,
-    factory: CapabilityFactory<I, O>
-  ): void {
-    this.capabilityFactories.set(capabilityId, factory);
-
-    // Apply this factory to all existing models
-    for (const [modelId, model] of this.models.entries()) {
-      if (model.hasCapability(capabilityId)) {
-        const capability = model.getCapability<I, O>(capabilityId);
-        if (capability) {
-          this.registry.registerCapability({
-            id: capabilityId,
-            input: capability.input,
-            output: capability.output,
-            model: modelId
-          });
-        }
-      }
-    }
-
-    log.debug({ msg: "Registered capability factory", capabilityId });
-  }
 
   /**
    * Register a model
@@ -62,12 +31,7 @@ export class ModelService {
     // Register all capabilities provided by the model
     const capabilities = model.getCapabilities();
     for (const capability of capabilities) {
-      this.registry.registerCapability({
-        id: capability.id,
-        input: capability.input,
-        output: capability.output,
-        model: model.id
-      });
+      this.registry.registerCapability(model.id, capability.id);
 
       // Check if this capability already has a default model
       // If not, set this model as the default for this capability
@@ -126,20 +90,21 @@ export class ModelService {
 
     // Try to get the capability from the model
     const capability = model.getCapability<I, O>(resolvedCapabilityId);
-    if (capability) {
-      return capability.execute(input, config);
-    }
-
-    // Try to create the capability using a registered factory
-    const factory = this.capabilityFactories.get(resolvedCapabilityId);
-    if (!factory) {
+    if (!capability) {
       throw new Error(
-        `Capability ${resolvedCapabilityId} not found on model ${model.id} and no factory registered`
+        `Capability ${resolvedCapabilityId} not found on model ${model.id}`
       );
     }
 
-    const createdCapability = factory(model) as ModelCapability<I, O>;
-    return createdCapability.execute(input, config);
+    // Validate the input against the capability's input schema
+    const validatedInput = capability.input.safeParse(input);
+    if (!validatedInput.success) {
+      throw new Error(
+        `Invalid input for capability ${resolvedCapabilityId}: ${validatedInput.error}`
+      );
+    }
+    const result = await capability.execute(validatedInput.data, config);
+    return capability.output.parse(result);
   }
 
   /**

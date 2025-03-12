@@ -18,29 +18,15 @@ export interface ModelCapability<InputType = unknown, OutputType = unknown> {
  * Registry for model capabilities
  */
 export class CapabilityRegistry {
+  private capabilities = new Map<string, Set<string>>();
   private defaultModels = new Map<string, string>();
-  private capabilities: Record<
-    string,
-    { input: z.ZodTypeAny; output: z.ZodTypeAny; models: Set<string> }
-  > = {};
 
   /**
    * Register a capability for a model
    */
-  registerCapability(capability: {
-    id: string;
-    input: z.ZodTypeAny;
-    output: z.ZodTypeAny;
-    model: string;
-  }): void {
-    if (!this.capabilities[capability.id]) {
-      this.capabilities[capability.id] = {
-        input: capability.input,
-        output: capability.output,
-        models:
-          this.capabilities[capability.id]?.models.add(capability.model) ||
-          new Set([capability.model])
-      };
+  registerCapability(modelId: string, capabilityId: string): void {
+    if (!this.capabilities.has(capabilityId)) {
+      this.capabilities.set(capabilityId, new Set([modelId]));
     }
   }
 
@@ -49,8 +35,8 @@ export class CapabilityRegistry {
    */
   setDefaultModelForCapability(capabilityId: string, modelId: string): void {
     if (
-      !this.capabilities[capabilityId] ||
-      !this.capabilities[capabilityId].models.has(modelId)
+      !this.capabilities.has(capabilityId) ||
+      !this.capabilities.get(capabilityId)!.has(modelId)
     ) {
       throw new Error(
         `Model ${modelId} does not support capability ${capabilityId}`
@@ -70,14 +56,14 @@ export class CapabilityRegistry {
    * Get all models that support a capability
    */
   getModelsWithCapability(capabilityId: string): string[] {
-    return Array.from(this.capabilities[capabilityId]?.models || new Set());
+    return Array.from(this.capabilities.get(capabilityId) || new Set());
   }
 
   /**
    * Get all registered capabilities
    */
   getAllCapabilities(): string[] {
-    return Array.from(Object.keys(this.capabilities));
+    return Array.from(this.capabilities.keys());
   }
 
   /**
@@ -85,8 +71,8 @@ export class CapabilityRegistry {
    */
   hasCapability(capabilityId: string): boolean {
     return (
-      (this.capabilities[capabilityId] ?? false) &&
-      (this.capabilities[capabilityId]?.models.size ?? 0) > 0
+      this.capabilities.has(capabilityId) &&
+      this.capabilities.get(capabilityId)!.size > 0
     );
   }
 }

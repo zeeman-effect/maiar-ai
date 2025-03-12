@@ -1,23 +1,21 @@
 import { PluginBase, AgentContext, PluginResult } from "@maiar-ai/core";
-import { ImageService } from "./service";
-import { PluginImageConfig, PromptResponseSchema } from "./types";
+import { PromptResponseSchema } from "./types";
 import { generatePromptTemplate } from "./templates";
 
 export class PluginImageGeneration extends PluginBase {
-  private service: ImageService;
-
-  constructor(config: PluginImageConfig = {}) {
-    if (!config.apiKey) {
-      throw new Error("GETIMG_API_KEY is required for image generation plugin");
-    }
-
+  constructor() {
     super({
       id: "plugin-image-generation",
       name: "image",
-      description: "Generate images from text descriptions using GetImg.ai API"
+      description: "Generate images from text descriptions using GetImg.ai API",
+      capabilities: [
+        {
+          id: "generate_image",
+          description: "Generate an image based on a text prompt",
+          required: true
+        }
+      ]
     });
-
-    this.service = new ImageService(config.apiKey);
 
     this.addExecutor({
       name: "generate_image",
@@ -32,14 +30,17 @@ export class PluginImageGeneration extends PluginBase {
 
           const prompt = promptResponse.prompt;
 
-          const urls = await this.service.getImage(prompt);
+          const urls = await this.runtime.executeCapability<string, string[]>(
+            "generate_image",
+            prompt
+          );
 
           return {
             success: true,
             data: {
               urls,
               helpfulInstruction:
-                "IMPORTANT: You MUST use the exact URLs provided in the urls array above. DO NOT use placeholders like [generated-image-url]. Instead, copy and paste the complete URL from the urls array into your response. The user can access these URLs directly. Other plugins can also access these URLs."
+                "IMPORTANT: You MUST use the exact URLs provided in the urls array above, including query parameters. DO NOT trucate the urls. DO NOT use placeholders like [generated-image-url]. Instead, copy and paste the complete URL from the urls array into your response. The user can access these URLs directly. Other plugins can also access these URLs."
             }
           };
         } catch (error) {
