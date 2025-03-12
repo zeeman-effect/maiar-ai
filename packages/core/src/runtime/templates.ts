@@ -295,8 +295,7 @@ Please generate a JSON object that matches the following schema:
 ${context.schema}
 
 Return ONLY the JSON object, with no additional text or explanation.
-The response must be valid JSON that can be parsed with JSON.parse() and it must be an array.
-If there is only one object, return an array with one object.
+The response must be valid JSON that can be parsed with JSON.parse().
 
     IMPORTANT: Your response MUST be valid JSON:
     - Use double quotes (") not single quotes (')
@@ -304,7 +303,6 @@ If there is only one object, return an array with one object.
     - Do not use smart/curly quotes
     - The response must be parseable by JSON.parse()
 
-    The array of objects should satisfy this requirement:
 ${context.prompt}
 `;
 

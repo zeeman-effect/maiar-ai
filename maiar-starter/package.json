@@ -18,6 +18,7 @@
     "@maiar-ai/monitor-websocket": "workspace:*",
     "@maiar-ai/plugin-character": "workspace:*",
     "@maiar-ai/plugin-express": "workspace:*",
+    "@maiar-ai/plugin-image": "workspace:*",
     "@maiar-ai/plugin-search": "workspace:*",
     "@maiar-ai/plugin-telegram": "workspace:*",
     "@maiar-ai/plugin-terminal": "workspace:*",

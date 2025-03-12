@@ -24,10 +24,7 @@ export const textGenerationSchema = {
 
 export const imageGenerationSchema = {
   input: z.string(),
-  output: z.object({
-    url: z.string(),
-    revisedPrompt: z.string().optional()
-  })
+  output: z.array(z.string())
 };
 
 export class OpenAIProvider extends ModelProviderBase {
@@ -66,9 +63,8 @@ export class OpenAIProvider extends ModelProviderBase {
   async generateImage(
     prompt: string,
     config?: OpenAIModelRequestConfig
-  ): Promise<string[]> {
+  ): Promise<z.infer<typeof imageGenerationSchema.output>> {
     const response = await this.client.images.generate({
-      model: this.model,
       prompt: prompt,
       n: config?.n ?? 1,
       size: config?.size ?? "1024x1024"
@@ -91,7 +87,7 @@ export class OpenAIProvider extends ModelProviderBase {
   async generateText(
     prompt: string,
     config?: ModelRequestConfig
-  ): Promise<string> {
+  ): Promise<z.infer<typeof textGenerationSchema.output>> {
     try {
       const completion = await this.client.chat.completions.create({
         model: this.model,

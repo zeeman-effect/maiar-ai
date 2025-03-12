@@ -17,10 +17,6 @@ export interface GenerateImageResponse {
   cost: number;
 }
 
-export interface PluginImageConfig {
-  apiKey?: string;
-}
-
 export const PromptResponseSchema = z.object({
   prompt: z.string().describe("The prompt for the image generation model")
 });
