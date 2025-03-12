@@ -114,7 +114,7 @@ export const PipelineModificationSchema = z
       .describe("Explanation of why the pipeline needs to be modified"),
     modifiedSteps: z
       .array(PipelineStepSchema)
-      .optional()
+      .nullable()
       .describe("The new steps to use if modification is needed")
   })
   .describe("Result of pipeline modification evaluation");

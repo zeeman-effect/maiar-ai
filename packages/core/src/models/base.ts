@@ -100,13 +100,13 @@ export abstract class ModelProviderBase implements ModelProvider {
     input: I,
     config?: ModelRequestConfig
   ): Promise<O> {
-    const capability = this.getCapability<I, O>(capabilityId);
+    const capability = this.capabilities.get(capabilityId);
     if (!capability) {
       throw new Error(
         `Capability ${capabilityId} not found on model ${this.id}`
       );
     }
-    return capability.execute(input, config);
+    return capability.execute(input, config) as Promise<O>;
   }
 
   public abstract checkHealth(): Promise<void>;
@@ -131,6 +131,8 @@ export class LoggingModelDecorator extends ModelProviderBase {
         id: capability.id,
         name: capability.name,
         description: capability.description,
+        input: capability.input,
+        output: capability.output,
         execute: async (input: unknown, config?: ModelRequestConfig) => {
           try {
             // Log the input
