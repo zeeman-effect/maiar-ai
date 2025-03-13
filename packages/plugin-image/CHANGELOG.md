@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.12.0...v0.13.0) (2025-03-13)
+
+### Features
+
+- **core:** runtime type checking for capability execute methods ([e1ab2b1](https://github.com/UraniumCorporation/maiar-ai/commit/e1ab2b1f716a706c873e24f0fe593b8110d96993))
+
 # [0.12.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.11.0...v0.12.0) (2025-03-13)
 
 **Note:** Version bump only for package @maiar-ai/plugin-image

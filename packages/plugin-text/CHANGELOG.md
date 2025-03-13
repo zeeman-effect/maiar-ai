@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.12.0...v0.13.0) (2025-03-13)
+
+### Bug Fixes
+
+- address PR comments, remove sqlite-vec files, update capability aliases type and implementation ([d92fb59](https://github.com/UraniumCorporation/maiar-ai/commit/d92fb59a17d52395d2a9720df74a4af32d5a3b60))
+
+### Features
+
+- **core:** multimodal model support with capabilities registry ([064aa57](https://github.com/UraniumCorporation/maiar-ai/commit/064aa5740e0cb1a401305ee0aaa888134f1eb022))
+
 # [0.12.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.11.0...v0.12.0) (2025-03-13)
 
 **Note:** Version bump only for package @maiar-ai/plugin-text
