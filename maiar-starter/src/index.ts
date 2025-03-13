@@ -39,7 +39,7 @@ import { router } from "./express-app";
 const runtime = createRuntime({
   models: [
     new OpenAIProvider({
-      model: "gpt-4o",
+      models: ["gpt-4o", "dall-e-3"],
       apiKey: process.env.OPENAI_API_KEY as string
     })
   ],
