@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.11.0...v0.12.0) (2025-03-13)
+
+### Features
+
+- **plugin-x:** use official x api ([50c258d](https://github.com/UraniumCorporation/maiar-ai/commit/50c258db115ae7e994759db76a6383879c5e378f))
+
+### BREAKING CHANGES
+
+- **plugin-x:** x plugin configuration change, complete auth flow rework
+
 # [0.11.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.10.0...v0.11.0) (2025-03-06)
 
 **Note:** Version bump only for package @maiar-ai/plugin-x
