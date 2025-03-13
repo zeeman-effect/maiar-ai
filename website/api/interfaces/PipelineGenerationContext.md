@@ -2,9 +2,9 @@
 
 # Interface: PipelineGenerationContext
 
-Defined in: [packages/core/src/runtime/types.ts:68](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L68)
+Defined in: [packages/core/src/runtime/types.ts:72](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L72)
 
-Context passed to the LLM for pipeline generation
+Context passed to the runtime for pipeline generation
 
 ## Properties
 
@@ -12,7 +12,7 @@ Context passed to the LLM for pipeline generation
 
 > **contextChain**: [`BaseContextItem`](BaseContextItem.md)[]
 
-Defined in: [packages/core/src/runtime/types.ts:69](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L69)
+Defined in: [packages/core/src/runtime/types.ts:73](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L73)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [packages/core/src/runtime/types.ts:69](https://github.com/UraniumCo
 
 > **availablePlugins**: `AvailablePlugin`[]
 
-Defined in: [packages/core/src/runtime/types.ts:70](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L70)
+Defined in: [packages/core/src/runtime/types.ts:74](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L74)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/runtime/types.ts:70](https://github.com/UraniumCo
 
 > **currentContext**: `object`
 
-Defined in: [packages/core/src/runtime/types.ts:71](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L71)
+Defined in: [packages/core/src/runtime/types.ts:75](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L75)
 
 #### platform
 

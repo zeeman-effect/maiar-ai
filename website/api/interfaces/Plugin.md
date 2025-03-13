@@ -2,9 +2,9 @@
 
 # Interface: Plugin
 
-Defined in: [packages/core/src/plugin/index.ts:40](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L40)
+Defined in: [packages/core/src/plugin/index.ts:49](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L49)
 
-Base plugin interface that all plugins must implement
+Plugin interface that all plugins must implement
 
 ## Properties
 
@@ -12,7 +12,7 @@ Base plugin interface that all plugins must implement
 
 > **id**: `string`
 
-Defined in: [packages/core/src/plugin/index.ts:41](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L41)
+Defined in: [packages/core/src/plugin/index.ts:50](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L50)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [packages/core/src/plugin/index.ts:41](https://github.com/UraniumCor
 
 > **name**: `string`
 
-Defined in: [packages/core/src/plugin/index.ts:42](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L42)
+Defined in: [packages/core/src/plugin/index.ts:51](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L51)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/plugin/index.ts:42](https://github.com/UraniumCor
 
 > **description**: `string`
 
-Defined in: [packages/core/src/plugin/index.ts:43](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L43)
+Defined in: [packages/core/src/plugin/index.ts:52](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L52)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/plugin/index.ts:43](https://github.com/UraniumCor
 
 > **executors**: [`Executor`](Executor.md)[]
 
-Defined in: [packages/core/src/plugin/index.ts:44](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L44)
+Defined in: [packages/core/src/plugin/index.ts:53](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L53)
 
 ***
 
@@ -44,7 +44,15 @@ Defined in: [packages/core/src/plugin/index.ts:44](https://github.com/UraniumCor
 
 > **triggers**: [`Trigger`](Trigger.md)[]
 
-Defined in: [packages/core/src/plugin/index.ts:45](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L45)
+Defined in: [packages/core/src/plugin/index.ts:54](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L54)
+
+***
+
+### capabilities
+
+> **capabilities**: [`Capability`](Capability.md)[]
+
+Defined in: [packages/core/src/plugin/index.ts:55](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L55)
 
 ***
 
@@ -52,7 +60,7 @@ Defined in: [packages/core/src/plugin/index.ts:45](https://github.com/UraniumCor
 
 > `optional` **init**: (`runtime`) => `Promise`\<`void`\>
 
-Defined in: [packages/core/src/plugin/index.ts:47](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L47)
+Defined in: [packages/core/src/plugin/index.ts:57](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L57)
 
 eslint-disable-next-line @typescript-eslint/no-explicit-any
 
@@ -72,7 +80,7 @@ eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 > **execute**: (`action`, `context`) => `Promise`\<[`PluginResult`](PluginResult.md)\>
 
-Defined in: [packages/core/src/plugin/index.ts:48](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L48)
+Defined in: [packages/core/src/plugin/index.ts:58](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L58)
 
 #### Parameters
 

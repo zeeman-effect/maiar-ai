@@ -4,4 +4,4 @@
 
 > **Pipeline**: `z.infer`\<*typeof* [`PipelineSchema`](../variables/PipelineSchema.md)\>
 
-Defined in: [packages/core/src/runtime/types.ts:25](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L25)
+Defined in: [packages/core/src/runtime/types.ts:28](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L28)

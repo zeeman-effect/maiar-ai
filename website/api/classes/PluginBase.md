@@ -2,7 +2,7 @@
 
 # Class: `abstract` PluginBase
 
-Defined in: [packages/core/src/plugin/index.ts:54](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L54)
+Defined in: [packages/core/src/plugin/index.ts:64](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L64)
 
 Base class that implements common plugin functionality
 
@@ -16,7 +16,7 @@ Base class that implements common plugin functionality
 
 > **new PluginBase**(`config`): [`PluginBase`](PluginBase.md)
 
-Defined in: [packages/core/src/plugin/index.ts:62](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L62)
+Defined in: [packages/core/src/plugin/index.ts:73](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L73)
 
 #### Parameters
 
@@ -34,6 +34,10 @@ Defined in: [packages/core/src/plugin/index.ts:62](https://github.com/UraniumCor
 
 `string`
 
+###### capabilities
+
+[`Capability`](../interfaces/Capability.md)[]
+
 #### Returns
 
 [`PluginBase`](PluginBase.md)
@@ -44,7 +48,7 @@ Defined in: [packages/core/src/plugin/index.ts:62](https://github.com/UraniumCor
 
 > **runtime**: [`Runtime`](Runtime.md)
 
-Defined in: [packages/core/src/plugin/index.ts:57](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L57)
+Defined in: [packages/core/src/plugin/index.ts:67](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L67)
 
 ***
 
@@ -52,7 +56,7 @@ Defined in: [packages/core/src/plugin/index.ts:57](https://github.com/UraniumCor
 
 > `readonly` **id**: `string`
 
-Defined in: [packages/core/src/plugin/index.ts:58](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L58)
+Defined in: [packages/core/src/plugin/index.ts:68](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L68)
 
 #### Implementation of
 
@@ -64,7 +68,7 @@ Defined in: [packages/core/src/plugin/index.ts:58](https://github.com/UraniumCor
 
 > `readonly` **name**: `string`
 
-Defined in: [packages/core/src/plugin/index.ts:59](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L59)
+Defined in: [packages/core/src/plugin/index.ts:69](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L69)
 
 #### Implementation of
 
@@ -76,11 +80,19 @@ Defined in: [packages/core/src/plugin/index.ts:59](https://github.com/UraniumCor
 
 > `readonly` **description**: `string`
 
-Defined in: [packages/core/src/plugin/index.ts:60](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L60)
+Defined in: [packages/core/src/plugin/index.ts:70](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L70)
 
 #### Implementation of
 
 [`Plugin`](../interfaces/Plugin.md).[`description`](../interfaces/Plugin.md#description)
+
+***
+
+### capabilitiesList
+
+> `readonly` **capabilitiesList**: [`Capability`](../interfaces/Capability.md)[] = `[]`
+
+Defined in: [packages/core/src/plugin/index.ts:71](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L71)
 
 ## Accessors
 
@@ -90,7 +102,7 @@ Defined in: [packages/core/src/plugin/index.ts:60](https://github.com/UraniumCor
 
 > **get** **executors**(): [`Executor`](../interfaces/Executor.md)[]
 
-Defined in: [packages/core/src/plugin/index.ts:72](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L72)
+Defined in: [packages/core/src/plugin/index.ts:89](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L89)
 
 ##### Returns
 
@@ -108,7 +120,7 @@ Defined in: [packages/core/src/plugin/index.ts:72](https://github.com/UraniumCor
 
 > **get** **triggers**(): [`Trigger`](../interfaces/Trigger.md)[]
 
-Defined in: [packages/core/src/plugin/index.ts:79](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L79)
+Defined in: [packages/core/src/plugin/index.ts:96](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L96)
 
 ##### Returns
 
@@ -118,13 +130,31 @@ Defined in: [packages/core/src/plugin/index.ts:79](https://github.com/UraniumCor
 
 [`Plugin`](../interfaces/Plugin.md).[`triggers`](../interfaces/Plugin.md#triggers)
 
+***
+
+### capabilities
+
+#### Get Signature
+
+> **get** **capabilities**(): [`Capability`](../interfaces/Capability.md)[]
+
+Defined in: [packages/core/src/plugin/index.ts:100](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L100)
+
+##### Returns
+
+[`Capability`](../interfaces/Capability.md)[]
+
+#### Implementation of
+
+[`Plugin`](../interfaces/Plugin.md).[`capabilities`](../interfaces/Plugin.md#capabilities)
+
 ## Methods
 
 ### init()
 
 > **init**(`runtime`): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/plugin/index.ts:68](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L68)
+Defined in: [packages/core/src/plugin/index.ts:85](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L85)
 
 eslint-disable-next-line @typescript-eslint/no-explicit-any
 
@@ -148,7 +178,7 @@ eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 > **addExecutor**(`executor`): `void`
 
-Defined in: [packages/core/src/plugin/index.ts:83](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L83)
+Defined in: [packages/core/src/plugin/index.ts:104](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L104)
 
 #### Parameters
 
@@ -166,7 +196,7 @@ Defined in: [packages/core/src/plugin/index.ts:83](https://github.com/UraniumCor
 
 > **addTrigger**(`trigger`): `void`
 
-Defined in: [packages/core/src/plugin/index.ts:87](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L87)
+Defined in: [packages/core/src/plugin/index.ts:108](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L108)
 
 #### Parameters
 
@@ -180,11 +210,29 @@ Defined in: [packages/core/src/plugin/index.ts:87](https://github.com/UraniumCor
 
 ***
 
+### addCapability()
+
+> **addCapability**(`capability`): `void`
+
+Defined in: [packages/core/src/plugin/index.ts:112](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L112)
+
+#### Parameters
+
+##### capability
+
+[`Capability`](../interfaces/Capability.md)
+
+#### Returns
+
+`void`
+
+***
+
 ### execute()
 
 > **execute**(`action`, `context`): `Promise`\<[`PluginResult`](../interfaces/PluginResult.md)\>
 
-Defined in: [packages/core/src/plugin/index.ts:91](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L91)
+Defined in: [packages/core/src/plugin/index.ts:116](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/plugin/index.ts#L116)
 
 #### Parameters
 

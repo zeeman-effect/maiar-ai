@@ -2,7 +2,7 @@
 
 # Class: Runtime
 
-Defined in: [packages/core/src/runtime/index.ts:88](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L88)
+Defined in: [packages/core/src/runtime/index.ts:188](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L188)
 
 Runtime class that manages the execution of plugins and agent state
 
@@ -12,7 +12,7 @@ Runtime class that manages the execution of plugins and agent state
 
 > **new Runtime**(`config`): [`Runtime`](Runtime.md)
 
-Defined in: [packages/core/src/runtime/index.ts:260](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L260)
+Defined in: [packages/core/src/runtime/index.ts:361](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L361)
 
 #### Parameters
 
@@ -30,7 +30,7 @@ Defined in: [packages/core/src/runtime/index.ts:260](https://github.com/UraniumC
 
 > `readonly` **operations**: `object`
 
-Defined in: [packages/core/src/runtime/index.ts:101](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L101)
+Defined in: [packages/core/src/runtime/index.ts:201](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L201)
 
 Operations that can be used by plugins
 
@@ -60,59 +60,39 @@ Operations that can be used by plugins
 
 `Promise`\<`TypeOf`\<`T`\>\>
 
-#### getText()
+#### executeCapability()
 
-> **getText**: (`prompt`, `config`?) => `Promise`\<`string`\>
+> **executeCapability**: \<`I`, `O`\>(`capabilityId`, `input`, `config`?, `modelId`?) => `Promise`\<`O`\>
 
-##### Parameters
+##### Type Parameters
 
-###### prompt
+• **I**
 
-`string`
-
-###### config?
-
-`GetObjectConfig`
-
-##### Returns
-
-`Promise`\<`string`\>
-
-#### getBoolean()
-
-> **getBoolean**: (`prompt`, `config`?) => `Promise`\<`boolean`\>
+• **O**
 
 ##### Parameters
 
-###### prompt
+###### capabilityId
 
 `string`
 
+###### input
+
+`I`
+
 ###### config?
 
-`GetObjectConfig`
+`OperationConfig`
+
+###### modelId?
+
+`string`
 
 ##### Returns
 
-`Promise`\<`boolean`\>
+`Promise`\<`O`\>
 
 ## Accessors
-
-### llm
-
-#### Get Signature
-
-> **get** **llm**(): [`LLMService`](LLMService.md)
-
-Defined in: [packages/core/src/runtime/index.ts:116](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L116)
-
-Access to the LLM service for plugins
-
-##### Returns
-
-[`LLMService`](LLMService.md)
-
-***
 
 ### memory
 
@@ -120,7 +100,7 @@ Access to the LLM service for plugins
 
 > **get** **memory**(): [`MemoryService`](MemoryService.md)
 
-Defined in: [packages/core/src/runtime/index.ts:123](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L123)
+Defined in: [packages/core/src/runtime/index.ts:224](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L224)
 
 Access to the memory service for plugins
 
@@ -136,7 +116,7 @@ Access to the memory service for plugins
 
 > **get** **monitor**(): [`MonitorService`](MonitorService.md)
 
-Defined in: [packages/core/src/runtime/index.ts:130](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L130)
+Defined in: [packages/core/src/runtime/index.ts:231](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L231)
 
 Access to the monitor service for plugins
 
@@ -152,7 +132,7 @@ Access to the monitor service for plugins
 
 > **get** **context**(): `undefined` \| [`AgentContext`](../interfaces/AgentContext.md)
 
-Defined in: [packages/core/src/runtime/index.ts:137](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L137)
+Defined in: [packages/core/src/runtime/index.ts:238](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L238)
 
 Access to the current context
 
@@ -166,7 +146,7 @@ Access to the current context
 
 > **registerPlugin**(`plugin`): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/runtime/index.ts:282](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L282)
+Defined in: [packages/core/src/runtime/index.ts:403](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L403)
 
 Register a plugin with the runtime
 
@@ -186,7 +166,7 @@ Register a plugin with the runtime
 
 > **start**(): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/runtime/index.ts:311](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L311)
+Defined in: [packages/core/src/runtime/index.ts:432](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L432)
 
 Start the runtime
 
@@ -200,7 +180,7 @@ Start the runtime
 
 > **stop**(): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/runtime/index.ts:349](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L349)
+Defined in: [packages/core/src/runtime/index.ts:490](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L490)
 
 Stop the runtime
 
@@ -214,7 +194,7 @@ Stop the runtime
 
 > **getPlugins**(): [`Plugin`](../interfaces/Plugin.md)[]
 
-Defined in: [packages/core/src/runtime/index.ts:368](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L368)
+Defined in: [packages/core/src/runtime/index.ts:509](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L509)
 
 Get all registered plugins
 
@@ -228,7 +208,7 @@ Get all registered plugins
 
 > **pushContext**(`context`): `void`
 
-Defined in: [packages/core/src/runtime/index.ts:375](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L375)
+Defined in: [packages/core/src/runtime/index.ts:516](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L516)
 
 Push a new context to the event queue
 
@@ -248,7 +228,7 @@ Push a new context to the event queue
 
 > **pushToContextChain**(`item`): `void`
 
-Defined in: [packages/core/src/runtime/index.ts:382](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L382)
+Defined in: [packages/core/src/runtime/index.ts:523](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L523)
 
 Context management methods for plugins
 
@@ -268,7 +248,7 @@ Context management methods for plugins
 
 > **createEvent**(`initialContext`, `platformContext`?): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/runtime/index.ts:403](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L403)
+Defined in: [packages/core/src/runtime/index.ts:544](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L544)
 
 #### Parameters
 
@@ -293,3 +273,37 @@ Defined in: [packages/core/src/runtime/index.ts:403](https://github.com/UraniumC
 #### Returns
 
 `Promise`\<`void`\>
+
+***
+
+### executeCapability()
+
+> **executeCapability**\<`I`, `O`\>(`id`, `input`, `config`?): `Promise`\<`O`\>
+
+Defined in: [packages/core/src/runtime/index.ts:1050](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L1050)
+
+Execute a capability on the model service
+
+#### Type Parameters
+
+• **I** = `unknown`
+
+• **O** = `unknown`
+
+#### Parameters
+
+##### id
+
+`string`
+
+##### input
+
+`I`
+
+##### config?
+
+[`ModelRequestConfig`](../interfaces/ModelRequestConfig.md)
+
+#### Returns
+
+`Promise`\<`O`\>

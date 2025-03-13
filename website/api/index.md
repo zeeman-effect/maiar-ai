@@ -1,10 +1,11 @@
-# @maiar-ai/core v0.11.0
+# @maiar-ai/core v0.12.0
 
 ## Classes
 
 - [MemoryService](classes/MemoryService.md)
+- [ModelProviderBase](classes/ModelProviderBase.md)
 - [LoggingModelDecorator](classes/LoggingModelDecorator.md)
-- [LLMService](classes/LLMService.md)
+- [ModelService](classes/ModelService.md)
 - [MonitorService](classes/MonitorService.md)
 - [PluginBase](classes/PluginBase.md)
 - [PluginRegistry](classes/PluginRegistry.md)
@@ -18,7 +19,6 @@
 - [MemoryQueryOptions](interfaces/MemoryQueryOptions.md)
 - [MemoryProvider](interfaces/MemoryProvider.md)
 - [ModelRequestConfig](interfaces/ModelRequestConfig.md)
-- [ModelInterface](interfaces/ModelInterface.md)
 - [ModelProvider](interfaces/ModelProvider.md)
 - [AgentState](interfaces/AgentState.md)
 - [MonitorProvider](interfaces/MonitorProvider.md)
@@ -26,13 +26,15 @@
 - [Executor](interfaces/Executor.md)
 - [ExecutorImplementation](interfaces/ExecutorImplementation.md)
 - [Trigger](interfaces/Trigger.md)
+- [Capability](interfaces/Capability.md)
 - [Plugin](interfaces/Plugin.md)
 - [PluginRegistryInterface](interfaces/PluginRegistryInterface.md)
+- [GetObjectConfig](interfaces/GetObjectConfig.md)
 - [RuntimeConfig](interfaces/RuntimeConfig.md)
 - [RuntimeOptions](interfaces/RuntimeOptions.md)
 - [PipelineGenerationContext](interfaces/PipelineGenerationContext.md)
 - [ErrorContextItem](interfaces/ErrorContextItem.md)
-- [PipelineEvaluationContext](interfaces/PipelineEvaluationContext.md)
+- [PipelineModificationContext](interfaces/PipelineModificationContext.md)
 - [BaseContextItem](interfaces/BaseContextItem.md)
 - [UserInputContext](interfaces/UserInputContext.md)
 - [HistoryContextItem](interfaces/HistoryContextItem.md)
@@ -41,6 +43,7 @@
 
 ## Type Aliases
 
+- [CapabilityFactory](type-aliases/CapabilityFactory.md)
 - [PipelineStep](type-aliases/PipelineStep.md)
 - [Pipeline](type-aliases/Pipeline.md)
 - [PipelineModification](type-aliases/PipelineModification.md)
@@ -54,6 +57,7 @@
 ## Functions
 
 - [createRuntime](functions/createRuntime.md)
+- [getObject](functions/getObject.md)
 - [getUserInput](functions/getUserInput.md)
 - [logModelInteraction](functions/logModelInteraction.md)
 - [createLogger](functions/createLogger.md)

@@ -1,40 +1,44 @@
-[@maiar-ai/core](../index.md) / LoggingModelDecorator
+[@maiar-ai/core](../index.md) / ModelProviderBase
 
-# Class: LoggingModelDecorator
+# Class: `abstract` ModelProviderBase
 
-Defined in: [packages/core/src/models/base.ts:122](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L122)
+Defined in: [packages/core/src/models/base.ts:65](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L65)
 
-Decorator that adds logging to any ModelProvider implementation.
-Logs all prompts, responses, and errors to the model interactions log file.
+Base class for model providers
 
-This follows the decorator pattern to add logging behavior to any model
-without requiring the model implementations to handle logging themselves.
+## Extended by
 
-## Extends
+- [`LoggingModelDecorator`](LoggingModelDecorator.md)
 
-- [`ModelProviderBase`](ModelProviderBase.md)
+## Implements
+
+- [`ModelProvider`](../interfaces/ModelProvider.md)
 
 ## Constructors
 
-### new LoggingModelDecorator()
+### new ModelProviderBase()
 
-> **new LoggingModelDecorator**(`model`): [`LoggingModelDecorator`](LoggingModelDecorator.md)
+> **new ModelProviderBase**(`id`, `name`, `description`): [`ModelProviderBase`](ModelProviderBase.md)
 
-Defined in: [packages/core/src/models/base.ts:123](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L123)
+Defined in: [packages/core/src/models/base.ts:71](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L71)
 
 #### Parameters
 
-##### model
+##### id
 
-[`ModelProvider`](../interfaces/ModelProvider.md)
+`string`
+
+##### name
+
+`string`
+
+##### description
+
+`string`
 
 #### Returns
 
-[`LoggingModelDecorator`](LoggingModelDecorator.md)
-
-#### Overrides
-
-[`ModelProviderBase`](ModelProviderBase.md).[`constructor`](ModelProviderBase.md#constructors)
+[`ModelProviderBase`](ModelProviderBase.md)
 
 ## Properties
 
@@ -44,9 +48,9 @@ Defined in: [packages/core/src/models/base.ts:123](https://github.com/UraniumCor
 
 Defined in: [packages/core/src/models/base.ts:66](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L66)
 
-#### Inherited from
+#### Implementation of
 
-[`ModelProviderBase`](ModelProviderBase.md).[`id`](ModelProviderBase.md#id-1)
+[`ModelProvider`](../interfaces/ModelProvider.md).[`id`](../interfaces/ModelProvider.md#id)
 
 ***
 
@@ -56,9 +60,9 @@ Defined in: [packages/core/src/models/base.ts:66](https://github.com/UraniumCorp
 
 Defined in: [packages/core/src/models/base.ts:67](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L67)
 
-#### Inherited from
+#### Implementation of
 
-[`ModelProviderBase`](ModelProviderBase.md).[`name`](ModelProviderBase.md#name-1)
+[`ModelProvider`](../interfaces/ModelProvider.md).[`name`](../interfaces/ModelProvider.md#name)
 
 ***
 
@@ -68,9 +72,9 @@ Defined in: [packages/core/src/models/base.ts:67](https://github.com/UraniumCorp
 
 Defined in: [packages/core/src/models/base.ts:68](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L68)
 
-#### Inherited from
+#### Implementation of
 
-[`ModelProviderBase`](ModelProviderBase.md).[`description`](ModelProviderBase.md#description-1)
+[`ModelProvider`](../interfaces/ModelProvider.md).[`description`](../interfaces/ModelProvider.md#description)
 
 ***
 
@@ -80,9 +84,9 @@ Defined in: [packages/core/src/models/base.ts:68](https://github.com/UraniumCorp
 
 Defined in: [packages/core/src/models/base.ts:69](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L69)
 
-#### Inherited from
+#### Implementation of
 
-[`ModelProviderBase`](ModelProviderBase.md).[`capabilities`](ModelProviderBase.md#capabilities)
+[`ModelProvider`](../interfaces/ModelProvider.md).[`capabilities`](../interfaces/ModelProvider.md#capabilities)
 
 ## Methods
 
@@ -104,9 +108,9 @@ Add a capability to the model
 
 `void`
 
-#### Inherited from
+#### Implementation of
 
-[`ModelProviderBase`](ModelProviderBase.md).[`addCapability`](ModelProviderBase.md#addcapability)
+[`ModelProvider`](../interfaces/ModelProvider.md).[`addCapability`](../interfaces/ModelProvider.md#addcapability)
 
 ***
 
@@ -134,9 +138,9 @@ Get a specific capability instance
 
 `undefined` \| `ModelCapability`\<`I`, `O`\>
 
-#### Inherited from
+#### Implementation of
 
-[`ModelProviderBase`](ModelProviderBase.md).[`getCapability`](ModelProviderBase.md#getcapability)
+[`ModelProvider`](../interfaces/ModelProvider.md).[`getCapability`](../interfaces/ModelProvider.md#getcapability)
 
 ***
 
@@ -152,9 +156,9 @@ Get all capabilities supported by this model
 
 `ModelCapability`[]
 
-#### Inherited from
+#### Implementation of
 
-[`ModelProviderBase`](ModelProviderBase.md).[`getCapabilities`](ModelProviderBase.md#getcapabilities)
+[`ModelProvider`](../interfaces/ModelProvider.md).[`getCapabilities`](../interfaces/ModelProvider.md#getcapabilities)
 
 ***
 
@@ -176,9 +180,9 @@ Check if the model supports a specific capability
 
 `boolean`
 
-#### Inherited from
+#### Implementation of
 
-[`ModelProviderBase`](ModelProviderBase.md).[`hasCapability`](ModelProviderBase.md#hascapability)
+[`ModelProvider`](../interfaces/ModelProvider.md).[`hasCapability`](../interfaces/ModelProvider.md#hascapability)
 
 ***
 
@@ -214,38 +218,24 @@ Execute a capability
 
 `Promise`\<`O`\>
 
-#### Inherited from
+#### Implementation of
 
-[`ModelProviderBase`](ModelProviderBase.md).[`executeCapability`](ModelProviderBase.md#executecapability)
+[`ModelProvider`](../interfaces/ModelProvider.md).[`executeCapability`](../interfaces/ModelProvider.md#executecapability)
 
 ***
 
 ### checkHealth()
 
-> **checkHealth**(): `Promise`\<`void`\>
+> `abstract` **checkHealth**(): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/models/base.ts:182](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L182)
+Defined in: [packages/core/src/models/base.ts:112](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L112)
 
-Delegate checkHealth to the underlying model
-
-#### Returns
-
-`Promise`\<`void`\>
-
-#### Overrides
-
-[`ModelProviderBase`](ModelProviderBase.md).[`checkHealth`](ModelProviderBase.md#checkhealth)
-
-***
-
-### init()
-
-> **init**(): `Promise`\<`void`\>
-
-Defined in: [packages/core/src/models/base.ts:189](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L189)
-
-Initialize the model if needed
+Check model health
 
 #### Returns
 
 `Promise`\<`void`\>
+
+#### Implementation of
+
+[`ModelProvider`](../interfaces/ModelProvider.md).[`checkHealth`](../interfaces/ModelProvider.md#checkhealth)
