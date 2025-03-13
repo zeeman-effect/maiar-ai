@@ -8,7 +8,7 @@ const log = createLogger("model:openai");
 
 export interface OpenAIConfig {
   apiKey: string;
-  model: string;
+  models: string[];
 }
 
 interface OpenAIModelRequestConfig extends ModelRequestConfig {
@@ -27,28 +27,33 @@ export const imageGenerationSchema = {
   output: z.array(z.string())
 };
 
+const textGenerationModels = ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"];
+const imageGenerationModels = ["dall-e-2", "dall-e-3"];
+
 export class OpenAIProvider extends ModelProviderBase {
   readonly id = "openai";
   readonly name = "OpenAI";
   readonly description = "OpenAI API models like GPT-4 and GPT-3.5";
   private client: OpenAI;
-  private model: string;
+  private models: string[];
 
   constructor(config: OpenAIConfig) {
     super("openai", "OpenAI", "OpenAI API models like GPT-4 and GPT-3.5");
     this.client = new OpenAI({ apiKey: config.apiKey });
-    this.model = config.model;
+    this.models = config.models;
 
-    this.addCapability({
-      id: "text-generation",
-      name: "Text generation capability",
-      description: "Generate text completions from prompts",
-      input: textGenerationSchema.input,
-      output: textGenerationSchema.output,
-      execute: this.generateText.bind(this)
-    });
+    if (this.models.some((model) => textGenerationModels.includes(model))) {
+      this.addCapability({
+        id: "text-generation",
+        name: "Text generation capability",
+        description: "Generate text completions from prompts",
+        input: textGenerationSchema.input,
+        output: textGenerationSchema.output,
+        execute: this.generateText.bind(this)
+      });
+    }
 
-    if (this.model === "gpt-4o") {
+    if (this.models.some((model) => imageGenerationModels.includes(model))) {
       this.addCapability({
         id: "image-generation",
         name: "Image generation capability",
@@ -90,7 +95,9 @@ export class OpenAIProvider extends ModelProviderBase {
   ): Promise<z.infer<typeof textGenerationSchema.output>> {
     try {
       const completion = await this.client.chat.completions.create({
-        model: this.model,
+        model: this.models.find((model) =>
+          textGenerationModels.includes(model)
+        ) as string,
         messages: [{ role: "user", content: prompt }],
         temperature: config?.temperature ?? 0.7,
         max_tokens: config?.maxTokens,

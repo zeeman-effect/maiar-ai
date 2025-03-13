@@ -24,7 +24,9 @@ import {
   generatePipelineTemplate,
   generatePipelineModificationTemplate,
   generateObjectTemplate,
-  generateRetryTemplate
+  generateRetryTemplate,
+  cleanJsonString,
+  extractJson
 } from "./templates";
 import { ModelService } from "../models/service";
 import { createLogger, logPipelineState } from "../utils/logger";
@@ -102,27 +104,6 @@ export function createRuntime(options: RuntimeOptions): Runtime {
     memoryService,
     monitorService
   });
-}
-
-// Helper to extract valid JSON from a string that might contain code blocks or extra text
-function extractJson(str: string): string {
-  // Remove markdown code blocks
-  str = str.replace(/```(?:\w*\s*)\n?/g, "").replace(/```/g, "");
-
-  // Find the last occurrence of a JSON structure (after any thinking tags)
-  const matches = str.match(/\{[\s\S]*\}|\[[\s\S]*\]/g);
-  if (!matches) {
-    throw new Error("No JSON-like structure found in response");
-  }
-
-  // Return the last match (after any thinking/reasoning)
-  return matches[matches.length - 1] ?? "";
-}
-
-// Helper to clean JSON string before parsing
-function cleanJsonString(str: string): string {
-  // Just trim whitespace - the model should be giving us valid JSON
-  return str.trim();
 }
 
 export interface GetObjectConfig extends OperationConfig {
