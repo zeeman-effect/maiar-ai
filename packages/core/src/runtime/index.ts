@@ -31,9 +31,9 @@ import {
 import { ModelService } from "../models/service";
 import { createLogger, logPipelineState } from "../utils/logger";
 import { formatZodSchema, OperationConfig } from "../operations/base";
-import { MemoryService } from "../memory/service";
 import { MonitorService } from "../monitor/service";
 import { LoggingModelDecorator, ModelRequestConfig } from "../models/base";
+import { MemoryPlugin } from "../memory/plugin";
 
 const log = createLogger("runtime");
 
@@ -92,16 +92,13 @@ export function createRuntime(options: RuntimeOptions): Runtime {
     }
   }
 
-  // Initialize memory service with configured memory provider
-  const memoryService = new MemoryService(options.memory);
-
   // Initialize monitor service if provider is available
   const monitorService = new MonitorService(options.monitor);
 
   return new Runtime({
     plugins: options.plugins,
     modelService,
-    memoryService,
+    memoryPlugin: options.memory,
     monitorService
   });
 }
@@ -191,7 +188,7 @@ export class Runtime {
   private eventQueue: AgentContext[] = [];
   private isRunning: boolean = false;
   private modelService: ModelService;
-  private memoryService: MemoryService;
+  private memoryPlugin: MemoryPlugin;
   private monitorService: MonitorService;
   private currentContext: AgentContext | undefined;
 
@@ -221,8 +218,8 @@ export class Runtime {
   /**
    * Access to the memory service for plugins
    */
-  public get memory(): MemoryService {
-    return this.memoryService;
+  public get memory(): Plugin {
+    return this.memoryPlugin;
   }
 
   /**
@@ -252,18 +249,22 @@ export class Runtime {
         contextChain: context.contextChain
       });
 
-      // Get conversation history if user input exists
+      // Get all messages from user
       let conversationHistory: {
         role: string;
         content: string;
         timestamp: number;
       }[] = [];
       if (userInput) {
-        conversationHistory =
-          await this.memoryService.getRecentConversationHistory(
-            userInput.user,
-            userInput.pluginId
-          );
+        const result = await this.memoryPlugin.query("user_context", {
+          user: userInput.user,
+          pluginId: userInput.pluginId
+        });
+        conversationHistory = result.data as {
+          role: string;
+          content: string;
+          timestamp: number;
+        }[];
       }
 
       // Add conversation history to the initial context item
@@ -290,13 +291,13 @@ export class Runtime {
             message: userInput.rawMessage,
             messageId: userInput.id
           });
-          await this.memoryService.storeUserInteraction(
-            userInput.user,
-            userInput.pluginId,
-            userInput.rawMessage,
-            userInput.timestamp,
-            userInput.id
-          );
+          await this.memoryPlugin.insert("user_context", {
+            user: userInput.user,
+            pluginId: userInput.pluginId,
+            rawMessage: userInput.rawMessage,
+            timestamp: userInput.timestamp,
+            id: userInput.id
+          });
         }
 
         // Wrap response handler if it exists
@@ -361,8 +362,8 @@ export class Runtime {
   constructor(config: RuntimeConfig) {
     this.registry = new PluginRegistry();
     this.modelService = config.modelService;
-    this.plugins = config.plugins || [];
-    this.memoryService = config.memoryService;
+    this.plugins = [config.memoryPlugin, ...(config.plugins || [])];
+    this.memoryPlugin = config.memoryPlugin;
     this.monitorService = config.monitorService;
 
     // Initialize monitoring if available
@@ -606,6 +607,7 @@ export class Runtime {
         });
 
         // Store agent message and context in memory with complete context chain
+        // TODO: Update this so that it is clear that an agent reponse is being stored, not a user message
         if (userInput) {
           const lastContext = context.contextChain[
             context.contextChain.length - 1
@@ -616,12 +618,13 @@ export class Runtime {
             platform: userInput.pluginId,
             response: lastContext.message
           });
-          await this.memoryService.storeAssistantInteraction(
-            userInput.user,
-            userInput.pluginId,
-            lastContext.message,
-            context.contextChain
-          );
+          await this.memoryPlugin.insert("user_context", {
+            user: userInput.user,
+            pluginId: userInput.pluginId,
+            rawMessage: lastContext.message,
+            timestamp: lastContext.timestamp,
+            id: lastContext.id
+          });
         }
 
         log.info("Pipeline execution complete");
@@ -672,11 +675,16 @@ export class Runtime {
       timestamp: number;
     }[] = [];
     if (userInput) {
-      conversationHistory =
-        await this.memoryService.getRecentConversationHistory(
-          userInput.user,
-          platform
-        );
+      // TODO: this query is not correct, we need to be able to query by user
+      const result = await this.memoryPlugin.query("user_context", {
+        user: userInput.user,
+        pluginId: userInput.pluginId
+      });
+      conversationHistory = result.data as {
+        role: string;
+        content: string;
+        timestamp: number;
+      }[];
     }
 
     // Create the generation context

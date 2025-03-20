@@ -1,14 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
 
-import { createLogger } from "@maiar-ai/core";
-import {
-  MemoryProvider,
-  Message,
-  Context,
-  Conversation,
-  MemoryQueryOptions
-} from "@maiar-ai/core";
+import { BaseContextItem, createLogger } from "@maiar-ai/core";
+import { MemoryProvider, MemoryQueryOptions } from "@maiar-ai/core";
 
 const log = createLogger("memory:filesystem");
 
@@ -48,102 +42,58 @@ export class FileSystemProvider implements MemoryProvider {
     return path.join(this.basePath, `${conversationId}.json`);
   }
 
-  async createConversation(options?: {
-    id?: string;
-    metadata?: Record<string, unknown>;
-  }): Promise<string> {
-    const conversationId =
-      options?.id || Math.random().toString(36).substring(2);
-    const conversation: Conversation = {
-      id: conversationId,
-      messages: [],
-      contexts: [],
-      metadata: options?.metadata
-    };
-
-    const filePath = this.getConversationPath(conversationId);
-    await fs.writeFile(filePath, JSON.stringify(conversation, null, 2));
-
-    log.info({
-      msg: "Created new conversation",
-      conversationId,
-      filePath
-    });
-
-    return conversationId;
+  async createTable(tableName: string): Promise<void> {
+    const filePath = path.join(this.basePath, `${tableName}.json`);
+    await fs.writeFile(filePath, JSON.stringify({}, null, 2));
   }
 
-  async storeMessage(message: Message, conversationId: string): Promise<void> {
-    const conversation = await this.getConversation(conversationId);
-    conversation.messages.push(message);
-    await fs.writeFile(
-      this.getConversationPath(conversationId),
-      JSON.stringify(conversation, null, 2)
-    );
+  async insert(tableName: string, row: Record<string, unknown>): Promise<void> {
+    const filePath = path.join(this.basePath, `${tableName}.json`);
+    await fs.writeFile(filePath, JSON.stringify(row, null, 2));
   }
 
-  async storeContext(context: Context, conversationId: string): Promise<void> {
-    const conversation = await this.getConversation(conversationId);
-    conversation.contexts.push(context);
-    await fs.writeFile(
-      this.getConversationPath(conversationId),
-      JSON.stringify(conversation, null, 2)
-    );
-  }
+  async query(
+    tableName: string,
+    query: MemoryQueryOptions
+  ): Promise<Record<string, unknown>[]> {
+    const filePath = path.join(this.basePath, `${tableName}.json`);
+    const data = await fs.readFile(filePath, "utf-8");
+    const parsedData = JSON.parse(data);
+    let results: BaseContextItem[] = Object.values(parsedData);
 
-  async getMessages(options: MemoryQueryOptions): Promise<Message[]> {
-    if (!options.conversationId) {
-      throw new Error(
-        "Conversation ID is required for filesystem memory provider"
+    if (query.after) {
+      results = results.filter(
+        (item: BaseContextItem) =>
+          item.timestamp && item.timestamp > query.after!
       );
     }
 
-    const conversation = await this.getConversation(options.conversationId);
-    let messages = conversation.messages;
-
-    if (options.after) {
-      messages = messages.filter((m: Message) => m.timestamp > options.after!);
-    }
-
-    if (options.before) {
-      messages = messages.filter((m: Message) => m.timestamp < options.before!);
-    }
-
-    if (options.limit) {
-      messages = messages.slice(-options.limit);
-    }
-
-    return messages;
-  }
-
-  async getContexts(conversationId: string): Promise<Context[]> {
-    const conversation = await this.getConversation(conversationId);
-    return conversation.contexts;
-  }
-
-  async getConversation(conversationId: string): Promise<Conversation> {
-    try {
-      const data = await fs.readFile(
-        this.getConversationPath(conversationId),
-        "utf-8"
+    if (query.before) {
+      results = results.filter(
+        (item: BaseContextItem) =>
+          item.timestamp && item.timestamp < query.before!
       );
-      return JSON.parse(data);
-    } catch (error) {
-      log.error({ msg: "Failed to read conversation", conversationId, error });
-      throw new Error(`Conversation not found: ${conversationId}`);
     }
+
+    results.sort((a, b) => b.timestamp - a.timestamp);
+
+    if (query.limit) {
+      results = results.slice(0, query.limit);
+    }
+    return JSON.parse(data);
   }
 
-  async deleteConversation(conversationId: string): Promise<void> {
-    try {
-      await fs.unlink(this.getConversationPath(conversationId));
-    } catch (error) {
-      log.error({
-        msg: "Failed to delete conversation",
-        conversationId,
-        error
-      });
-      throw error;
-    }
+  async remove(tableName: string, id: string): Promise<void> {
+    const filePath = path.join(this.basePath, `${tableName}.json`);
+
+    const data = await fs.readFile(filePath, "utf-8");
+    const parsedData = JSON.parse(data);
+    delete parsedData[id];
+    await fs.writeFile(filePath, JSON.stringify(parsedData, null, 2));
+  }
+
+  async clear(tableName: string): Promise<void> {
+    const filePath = path.join(this.basePath, `${tableName}.json`);
+    await fs.unlink(filePath);
   }
 }

@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { Plugin } from "../plugin";
-import { MemoryService } from "../memory/service";
-import { MemoryProvider } from "../memory/types";
+import { MemoryPlugin } from "../memory/plugin";
 import { ModelProvider } from "../models/base";
 import { ModelService } from "../models/service";
 import { BaseContextItem } from "../types/agent";
@@ -33,7 +32,7 @@ export type Pipeline = z.infer<typeof PipelineSchema>;
 export interface RuntimeConfig {
   plugins?: Plugin[];
   modelService: ModelService;
-  memoryService: MemoryService;
+  memoryPlugin: MemoryPlugin;
   monitorService: MonitorService;
 }
 
@@ -42,7 +41,7 @@ export interface RuntimeConfig {
  */
 export interface RuntimeOptions {
   models: ModelProvider[];
-  memory: MemoryProvider;
+  memory: MemoryPlugin;
   plugins: Plugin[];
   monitor?: MonitorProvider[];
   capabilityAliases?: string[][];

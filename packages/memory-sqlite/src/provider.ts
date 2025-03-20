@@ -5,23 +5,9 @@ import Database from "better-sqlite3";
 
 import { createLogger } from "@maiar-ai/core";
 
-import {
-  MemoryProvider,
-  Message,
-  Context,
-  Conversation,
-  MemoryQueryOptions
-} from "@maiar-ai/core";
+import { MemoryProvider, MemoryQueryOptions } from "@maiar-ai/core";
 
 const log = createLogger("memory:sqlite");
-
-type JSONValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JSONValue[]
-  | { [key: string]: JSONValue };
 
 export interface SQLiteConfig {
   dbPath: string;
@@ -40,8 +26,14 @@ export class SQLiteProvider implements MemoryProvider {
 
     this.db = new Database(path.resolve(config.dbPath));
     this.db.exec("PRAGMA foreign_keys = ON;");
-    this.initializeStorage();
     this.checkHealth();
+  }
+
+  // TODO: Make more generic, allow for more than just id, content, timestamp
+  async createTable(tableName: string): Promise<void> {
+    this.db.exec(
+      `CREATE TABLE IF NOT EXISTS ${tableName} (id TEXT PRIMARY KEY, content TEXT NOT NULL, timestamp INTEGER NOT NULL)`
+    );
   }
 
   private checkHealth() {
@@ -63,190 +55,67 @@ export class SQLiteProvider implements MemoryProvider {
     }
   }
 
-  private initializeStorage() {
-    this.createTables().then(() => {
-      log.info({ msg: "Initialized SQLite memory storage" });
-    });
-  }
-
-  private async createTables(): Promise<void> {
-    await this.db.exec(`
-            CREATE TABLE IF NOT EXISTS conversations (
-                id TEXT PRIMARY KEY,
-                user TEXT NOT NULL,
-                platform TEXT NOT NULL,
-                created_at INTEGER NOT NULL
-            );
-
-            CREATE TABLE IF NOT EXISTS messages (
-                id TEXT PRIMARY KEY,
-                conversation_id TEXT NOT NULL,
-                role TEXT NOT NULL,
-                content TEXT NOT NULL,
-                timestamp INTEGER NOT NULL,
-                context_id TEXT,
-                user_message_id TEXT,
-                FOREIGN KEY (conversation_id) REFERENCES conversations(id),
-                FOREIGN KEY (context_id) REFERENCES contexts(id),
-                FOREIGN KEY (user_message_id) REFERENCES messages(id)
-            );
-
-            CREATE TABLE IF NOT EXISTS contexts (
-                id TEXT PRIMARY KEY,
-                conversation_id TEXT NOT NULL,
-                type TEXT NOT NULL,
-                content TEXT NOT NULL,
-                timestamp INTEGER NOT NULL,
-                FOREIGN KEY (conversation_id) REFERENCES conversations(id)
-            );
+  async insert(tableName: string, row: Record<string, unknown>): Promise<void> {
+    const stmt = this.db.prepare(`
+            INSERT INTO ${tableName} (id, content, timestamp)
+            VALUES (?, ?, ?)
         `);
+    stmt.run(row.id, row.content, row.timestamp);
   }
 
-  async createConversation(options?: {
-    id?: string;
-    metadata?: Record<string, JSONValue>;
-  }): Promise<string> {
-    const stmt = this.db.prepare(
-      "INSERT INTO conversations (id, user, platform, created_at) VALUES (?, ?, ?, ?)"
-    );
-    const id = options?.id || Math.random().toString(36).substring(2);
-    const [user, platform] = id.split("-");
-    const timestamp = Date.now();
+  async query(
+    tableName: string,
+    query: MemoryQueryOptions
+  ): Promise<Record<string, unknown>[]> {
+    let queryString = `SELECT * FROM ${tableName}`;
+    const params: (string | number)[] = [];
 
-    log.info({ msg: "Creating new conversation", id });
+    if (query.after) {
+      queryString += " AND timestamp > ?";
+      params.push(query.after);
+    }
+
+    if (query.before) {
+      queryString += " AND timestamp < ?";
+      params.push(query.before);
+    }
+
+    queryString += " ORDER BY timestamp DESC";
+
+    if (query.limit) {
+      queryString += " LIMIT ?";
+      params.push(query.limit);
+    }
+
+    const stmt = this.db.prepare(queryString);
+    return stmt.all(...params) as Record<string, unknown>[];
+  }
+
+  async remove(tableName: string, id: string): Promise<void> {
+    const deleteMessages = this.db.prepare(
+      `DELETE FROM ${tableName} WHERE id = ?`
+    );
+
     try {
-      stmt.run(id, user, platform, timestamp);
-      log.info({ msg: "Created conversation successfully", id });
-      return id;
+      deleteMessages.run(id);
     } catch (error) {
-      log.error({ msg: "Failed to create conversation", id, error });
+      log.error({
+        msg: "Failed to delete conversation",
+        id,
+        error
+      });
       throw error;
     }
   }
 
-  async storeMessage(message: Message, conversationId: string): Promise<void> {
-    const stmt = this.db.prepare(`
-            INSERT INTO messages (id, conversation_id, role, content, timestamp, context_id, user_message_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        `);
-    stmt.run(
-      message.id,
-      conversationId,
-      message.role,
-      message.content,
-      message.timestamp,
-      message.contextId,
-      message.user_message_id
-    );
-  }
-
-  async storeContext(context: Context, conversationId: string): Promise<void> {
-    const stmt = this.db.prepare(`
-            INSERT INTO contexts (id, conversation_id, type, content, timestamp)
-            VALUES (?, ?, ?, ?, ?)
-        `);
-    stmt.run(
-      context.id,
-      conversationId,
-      context.type,
-      context.content,
-      context.timestamp
-    );
-  }
-
-  async getMessages(options: MemoryQueryOptions): Promise<Message[]> {
-    if (!options.conversationId) {
-      throw new Error("Conversation ID is required for SQLite memory provider");
-    }
-
-    let query = "SELECT * FROM messages WHERE conversation_id = ?";
-    const params: (string | number)[] = [options.conversationId];
-
-    if (options.after) {
-      query += " AND timestamp > ?";
-      params.push(options.after);
-    }
-
-    if (options.before) {
-      query += " AND timestamp < ?";
-      params.push(options.before);
-    }
-
-    query += " ORDER BY timestamp DESC";
-
-    if (options.limit) {
-      query += " LIMIT ?";
-      params.push(options.limit);
-    }
-
-    const stmt = this.db.prepare(query);
-    return stmt.all(...params) as Message[];
-  }
-
-  async getContexts(conversationId: string): Promise<Context[]> {
-    const stmt = this.db.prepare(
-      "SELECT * FROM contexts WHERE conversation_id = ?"
-    );
-    return stmt.all(conversationId) as Context[];
-  }
-
-  async getConversation(conversationId: string): Promise<Conversation> {
-    log.info({ msg: "Fetching conversation", conversationId });
-    const conversationStmt = this.db.prepare(
-      "SELECT * FROM conversations WHERE id = ?"
-    );
-    const conversation = conversationStmt.get(conversationId) as {
-      id: string;
-      metadata: string | null;
-    };
-
-    if (!conversation) {
-      log.error({ msg: "Conversation not found", conversationId });
-      throw new Error(`Conversation not found: ${conversationId}`);
-    }
-
-    const messages = await this.getMessages({ conversationId });
-    const contexts = await this.getContexts(conversationId);
-    log.info({
-      msg: "Retrieved conversation",
-      conversationId,
-      messageCount: messages.length,
-      contextCount: contexts.length
-    });
-
-    return {
-      id: conversationId,
-      messages,
-      contexts,
-      metadata: conversation.metadata
-        ? JSON.parse(conversation.metadata)
-        : undefined
-    };
-  }
-
-  async deleteConversation(conversationId: string): Promise<void> {
-    const deleteMessages = this.db.prepare(
-      "DELETE FROM messages WHERE conversation_id = ?"
-    );
-    const deleteContexts = this.db.prepare(
-      "DELETE FROM contexts WHERE conversation_id = ?"
-    );
-    const deleteConversation = this.db.prepare(
-      "DELETE FROM conversations WHERE id = ?"
-    );
-
-    const transaction = this.db.transaction(() => {
-      deleteMessages.run(conversationId);
-      deleteContexts.run(conversationId);
-      deleteConversation.run(conversationId);
-    });
-
+  async clear(tableName: string): Promise<void> {
+    const stmt = this.db.prepare(`DELETE FROM ${tableName}`);
     try {
-      transaction();
+      stmt.run();
     } catch (error) {
       log.error({
-        msg: "Failed to delete conversation",
-        conversationId,
+        msg: "Failed to clear table",
+        tableName,
         error
       });
       throw error;

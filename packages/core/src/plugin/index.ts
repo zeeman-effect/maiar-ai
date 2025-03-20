@@ -53,8 +53,7 @@ export interface Plugin {
   executors: Executor[];
   triggers: Trigger[];
   capabilities: Capability[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  init?: (runtime: any) => Promise<void>;
+  init?: (runtime: Runtime) => Promise<void>;
   execute: (action: string, context: AgentContext) => Promise<PluginResult>;
 }
 

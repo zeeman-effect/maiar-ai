@@ -24,6 +24,8 @@ export interface Conversation {
 }
 
 export interface MemoryQueryOptions {
+  user?: string;
+  pluginId?: string;
   limit?: number;
   before?: number;
   after?: number;
@@ -38,27 +40,21 @@ export interface MemoryProvider {
   readonly name: string;
   readonly description: string;
 
-  // Store a new message
-  storeMessage(message: Message, conversationId: string): Promise<void>;
+  // Create a new table in memory database
+  createTable(tableName: string): Promise<void>;
 
-  // Store context used in generating a response
-  storeContext(context: Context, conversationId: string): Promise<void>;
+  // Insert a new row into a table in memory database
+  insert(tableName: string, row: Record<string, unknown>): Promise<void>;
 
-  // Get recent messages
-  getMessages(options: MemoryQueryOptions): Promise<Message[]>;
+  // Query a table in memory database
+  query(
+    tableName: string,
+    query: MemoryQueryOptions
+  ): Promise<Record<string, unknown>[]>;
 
-  // Get contexts for a conversation
-  getContexts(conversationId: string): Promise<Context[]>;
+  // Remove a row from a table in memory database
+  remove(tableName: string, id: string): Promise<void>;
 
-  // Get full conversation history
-  getConversation(conversationId: string): Promise<Conversation>;
-
-  // Create a new conversation
-  createConversation(options?: {
-    id?: string;
-    metadata?: Record<string, unknown>;
-  }): Promise<string>;
-
-  // Delete a conversation and all its messages/contexts
-  deleteConversation(conversationId: string): Promise<void>;
+  // Clear a table in memory database
+  clear(tableName: string): Promise<void>;
 }
