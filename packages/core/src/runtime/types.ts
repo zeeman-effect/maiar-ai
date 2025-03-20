@@ -6,6 +6,7 @@ import { ModelService } from "../models/service";
 import { BaseContextItem } from "../types/agent";
 import { MonitorService } from "../monitor/service";
 import { MonitorProvider } from "../monitor/types";
+import { MemoryProvider } from "../memory/types";
 /**
  * A step in the execution pipeline
  */
@@ -41,7 +42,7 @@ export interface RuntimeConfig {
  */
 export interface RuntimeOptions {
   models: ModelProvider[];
-  memory: MemoryPlugin;
+  memory: MemoryProvider;
   plugins: Plugin[];
   monitor?: MonitorProvider[];
   capabilityAliases?: string[][];

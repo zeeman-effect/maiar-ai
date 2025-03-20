@@ -98,7 +98,12 @@ export function createRuntime(options: RuntimeOptions): Runtime {
   return new Runtime({
     plugins: options.plugins,
     modelService,
-    memoryPlugin: options.memory,
+    memoryPlugin: new MemoryPlugin({
+      id: "plugin-memory",
+      name: "Memory",
+      description: "Memory plugin",
+      memoryProvider: options.memory
+    }),
     monitorService
   });
 }
