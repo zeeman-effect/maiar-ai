@@ -1,6 +1,6 @@
 {
   "name": "@maiar-ai/memory-postgres",
-  "version": "0.13.0",
+  "version": "0.15.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -52,8 +52,8 @@
     "pg-pool": "3.6.1"
   },
   "devDependencies": {
-    "@types/pg": "8.11.11",
     "@types/node": "22.13.1",
+    "@types/pg": "8.11.11",
     "tsup": "8.3.6",
     "typescript": "5.7.3"
   }
