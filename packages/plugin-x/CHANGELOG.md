@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.13.0...v0.14.0) (2025-03-23)
+
+### Features
+
+- make monitor service a singleton ([da4c575](https://github.com/UraniumCorporation/maiar-ai/commit/da4c575c3280dba55bf39b8494a38f82dfd8c8cb))
+
 # [0.13.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.12.0...v0.13.0) (2025-03-13)
 
 **Note:** Version bump only for package @maiar-ai/plugin-x
