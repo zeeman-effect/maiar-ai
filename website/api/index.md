@@ -1,4 +1,4 @@
-# @maiar-ai/core v0.12.0
+# @maiar-ai/core v0.13.0
 
 ## Classes
 
@@ -20,6 +20,7 @@
 - [MemoryProvider](interfaces/MemoryProvider.md)
 - [ModelRequestConfig](interfaces/ModelRequestConfig.md)
 - [ModelProvider](interfaces/ModelProvider.md)
+- [MonitorEvent](interfaces/MonitorEvent.md)
 - [AgentState](interfaces/AgentState.md)
 - [MonitorProvider](interfaces/MonitorProvider.md)
 - [PluginResult](interfaces/PluginResult.md)

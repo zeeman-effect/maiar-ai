@@ -4,7 +4,7 @@
 
 > **getObject**\<`T`\>(`service`, `schema`, `prompt`, `config`?): `Promise`\<`z.infer`\<`T`\>\>
 
-Defined in: [packages/core/src/runtime/index.ts:113](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L113)
+Defined in: [packages/core/src/runtime/index.ts:128](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L128)
 
 ## Type Parameters
 

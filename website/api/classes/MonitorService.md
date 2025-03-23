@@ -2,92 +2,75 @@
 
 # Class: MonitorService
 
-Defined in: [packages/core/src/monitor/service.ts:17](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/monitor/service.ts#L17)
+Defined in: [packages/core/src/monitor/service.ts:12](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/monitor/service.ts#L12)
 
-Service for managing monitoring operations.
+Global monitor service that can be accessed by any component
 
-The MonitorService acts as a facade over multiple monitor implementations,
-allowing the runtime to easily communicate with all registered monitors.
-It handles the distribution of state updates and event logging to all
-registered monitor providers.
+## Methods
 
-This service is designed to:
-- Support zero, one, or multiple monitor providers
-- Handle failures in individual monitors gracefully
-- Provide consistent logging across all monitoring activities
+### getInstance()
 
-## Constructors
+> `static` **getInstance**(): [`MonitorService`](MonitorService.md)
 
-### new MonitorService()
+Defined in: [packages/core/src/monitor/service.ts:21](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/monitor/service.ts#L21)
 
-> **new MonitorService**(`providers`?): [`MonitorService`](MonitorService.md)
-
-Defined in: [packages/core/src/monitor/service.ts:26](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/monitor/service.ts#L26)
-
-Creates a new MonitorService with the specified providers.
-
-#### Parameters
-
-##### providers?
-
-One or more monitor providers to initialize the service with
-
-[`MonitorProvider`](../interfaces/MonitorProvider.md) | [`MonitorProvider`](../interfaces/MonitorProvider.md)[]
+Get the singleton instance of the monitor service
 
 #### Returns
 
 [`MonitorService`](MonitorService.md)
 
-## Methods
+***
+
+### init()
+
+> `static` **init**(`providers`): `void`
+
+Defined in: [packages/core/src/monitor/service.ts:32](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/monitor/service.ts#L32)
+
+Initialize the monitor service with providers
+This should be called during runtime creation
+
+#### Parameters
+
+##### providers
+
+[`MonitorProvider`](../interfaces/MonitorProvider.md)[]
+
+#### Returns
+
+`void`
+
+***
 
 ### publishEvent()
 
-> **publishEvent**(`event`): `Promise`\<`void`\>
+> `static` **publishEvent**(`event`): `void`
 
-Defined in: [packages/core/src/monitor/service.ts:55](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/monitor/service.ts#L55)
+Defined in: [packages/core/src/monitor/service.ts:40](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/monitor/service.ts#L40)
 
-Publishes an event to all registered monitor providers.
+Publish an event to all registered monitors
 
 #### Parameters
 
 ##### event
 
-Event details to publish
-
-###### type
-
-`string`
-
-###### message
-
-`string`
-
-###### timestamp
-
-`number`
-
-###### metadata
-
-`Record`\<`string`, `unknown`\>
+[`MonitorEvent`](../interfaces/MonitorEvent.md)
 
 #### Returns
 
-`Promise`\<`void`\>
-
-Promise that resolves when all providers have published the event (or failed)
+`void`
 
 ***
 
 ### checkHealth()
 
-> **checkHealth**(): `Promise`\<`void`\>
+> `static` **checkHealth**(): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/monitor/service.ts:92](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/monitor/service.ts#L92)
+Defined in: [packages/core/src/monitor/service.ts:55](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/monitor/service.ts#L55)
 
 Checks the health of all registered monitor providers.
 
 #### Returns
 
 `Promise`\<`void`\>
-
-Promise that resolves when all health checks complete (or fail)
