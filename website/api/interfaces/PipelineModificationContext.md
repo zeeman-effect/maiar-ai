@@ -2,7 +2,7 @@
 
 # Interface: PipelineModificationContext
 
-Defined in: [packages/core/src/runtime/types.ts:97](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L97)
+Defined in: [packages/core/src/runtime/types.ts:98](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L98)
 
 Context passed to the runtime for pipeline modification evaluation
 
@@ -12,7 +12,7 @@ Context passed to the runtime for pipeline modification evaluation
 
 > **contextChain**: [`BaseContextItem`](BaseContextItem.md)[]
 
-Defined in: [packages/core/src/runtime/types.ts:98](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L98)
+Defined in: [packages/core/src/runtime/types.ts:99](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L99)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [packages/core/src/runtime/types.ts:98](https://github.com/UraniumCo
 
 > **currentStep**: `object`
 
-Defined in: [packages/core/src/runtime/types.ts:99](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L99)
+Defined in: [packages/core/src/runtime/types.ts:100](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L100)
 
 #### pluginId
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/runtime/types.ts:99](https://github.com/UraniumCo
 
 > **availablePlugins**: `AvailablePlugin`[]
 
-Defined in: [packages/core/src/runtime/types.ts:100](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L100)
+Defined in: [packages/core/src/runtime/types.ts:101](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L101)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/runtime/types.ts:100](https://github.com/UraniumC
 
 > **pipeline**: `object`[]
 
-Defined in: [packages/core/src/runtime/types.ts:101](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L101)
+Defined in: [packages/core/src/runtime/types.ts:102](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L102)
 
 #### pluginId
 

@@ -2,7 +2,7 @@
 
 # Interface: RuntimeOptions
 
-Defined in: [packages/core/src/runtime/types.ts:43](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L43)
+Defined in: [packages/core/src/runtime/types.ts:44](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L44)
 
 Options for creating a new Runtime instance
 
@@ -12,7 +12,7 @@ Options for creating a new Runtime instance
 
 > **models**: [`ModelProvider`](ModelProvider.md)[]
 
-Defined in: [packages/core/src/runtime/types.ts:44](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L44)
+Defined in: [packages/core/src/runtime/types.ts:45](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L45)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [packages/core/src/runtime/types.ts:44](https://github.com/UraniumCo
 
 > **memory**: [`MemoryProvider`](MemoryProvider.md)
 
-Defined in: [packages/core/src/runtime/types.ts:45](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L45)
+Defined in: [packages/core/src/runtime/types.ts:46](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L46)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/runtime/types.ts:45](https://github.com/UraniumCo
 
 > **plugins**: [`Plugin`](Plugin.md)[]
 
-Defined in: [packages/core/src/runtime/types.ts:46](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L46)
+Defined in: [packages/core/src/runtime/types.ts:47](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L47)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/runtime/types.ts:46](https://github.com/UraniumCo
 
 > `optional` **monitor**: [`MonitorProvider`](MonitorProvider.md)[]
 
-Defined in: [packages/core/src/runtime/types.ts:47](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L47)
+Defined in: [packages/core/src/runtime/types.ts:48](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L48)
 
 ***
 
@@ -44,4 +44,4 @@ Defined in: [packages/core/src/runtime/types.ts:47](https://github.com/UraniumCo
 
 > `optional` **capabilityAliases**: `string`[][]
 
-Defined in: [packages/core/src/runtime/types.ts:48](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L48)
+Defined in: [packages/core/src/runtime/types.ts:49](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L49)

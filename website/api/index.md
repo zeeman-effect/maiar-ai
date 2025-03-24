@@ -1,4 +1,4 @@
-# @maiar-ai/core v0.15.0
+# @maiar-ai/core v0.16.0
 
 ## Classes
 
@@ -20,6 +20,7 @@
 - [MemoryProvider](interfaces/MemoryProvider.md)
 - [ModelRequestConfig](interfaces/ModelRequestConfig.md)
 - [ModelProvider](interfaces/ModelProvider.md)
+- [ICapabilities](interfaces/ICapabilities.md)
 - [MonitorEvent](interfaces/MonitorEvent.md)
 - [AgentState](interfaces/AgentState.md)
 - [MonitorProvider](interfaces/MonitorProvider.md)
@@ -30,12 +31,12 @@
 - [Capability](interfaces/Capability.md)
 - [Plugin](interfaces/Plugin.md)
 - [PluginRegistryInterface](interfaces/PluginRegistryInterface.md)
-- [GetObjectConfig](interfaces/GetObjectConfig.md)
 - [RuntimeConfig](interfaces/RuntimeConfig.md)
 - [RuntimeOptions](interfaces/RuntimeOptions.md)
 - [PipelineGenerationContext](interfaces/PipelineGenerationContext.md)
 - [ErrorContextItem](interfaces/ErrorContextItem.md)
 - [PipelineModificationContext](interfaces/PipelineModificationContext.md)
+- [GetObjectConfig](interfaces/GetObjectConfig.md)
 - [BaseContextItem](interfaces/BaseContextItem.md)
 - [UserInputContext](interfaces/UserInputContext.md)
 - [HistoryContextItem](interfaces/HistoryContextItem.md)
@@ -48,6 +49,7 @@
 - [PipelineStep](type-aliases/PipelineStep.md)
 - [Pipeline](type-aliases/Pipeline.md)
 - [PipelineModification](type-aliases/PipelineModification.md)
+- [ContextItemWithHistory](type-aliases/ContextItemWithHistory.md)
 
 ## Variables
 

@@ -2,7 +2,7 @@
 
 # Class: `abstract` ModelProviderBase
 
-Defined in: [packages/core/src/models/base.ts:66](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L66)
+Defined in: [packages/core/src/models/base.ts:67](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L67)
 
 Base class for model providers
 
@@ -20,7 +20,7 @@ Base class for model providers
 
 > **new ModelProviderBase**(`id`, `name`, `description`): [`ModelProviderBase`](ModelProviderBase.md)
 
-Defined in: [packages/core/src/models/base.ts:72](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L72)
+Defined in: [packages/core/src/models/base.ts:73](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L73)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [packages/core/src/models/base.ts:72](https://github.com/UraniumCorp
 
 > `readonly` **id**: `string`
 
-Defined in: [packages/core/src/models/base.ts:67](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L67)
+Defined in: [packages/core/src/models/base.ts:68](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L68)
 
 #### Implementation of
 
@@ -58,7 +58,7 @@ Defined in: [packages/core/src/models/base.ts:67](https://github.com/UraniumCorp
 
 > `readonly` **name**: `string`
 
-Defined in: [packages/core/src/models/base.ts:68](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L68)
+Defined in: [packages/core/src/models/base.ts:69](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L69)
 
 #### Implementation of
 
@@ -70,7 +70,7 @@ Defined in: [packages/core/src/models/base.ts:68](https://github.com/UraniumCorp
 
 > `readonly` **description**: `string`
 
-Defined in: [packages/core/src/models/base.ts:69](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L69)
+Defined in: [packages/core/src/models/base.ts:70](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L70)
 
 #### Implementation of
 
@@ -82,7 +82,7 @@ Defined in: [packages/core/src/models/base.ts:69](https://github.com/UraniumCorp
 
 > `readonly` **capabilities**: `Map`\<`string`, `ModelCapability`\>
 
-Defined in: [packages/core/src/models/base.ts:70](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L70)
+Defined in: [packages/core/src/models/base.ts:71](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L71)
 
 #### Implementation of
 
@@ -96,7 +96,7 @@ Defined in: [packages/core/src/models/base.ts:70](https://github.com/UraniumCorp
 
 > **get** `protected` **monitor**(): *typeof* [`MonitorService`](MonitorService.md)
 
-Defined in: [packages/core/src/models/base.ts:82](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L82)
+Defined in: [packages/core/src/models/base.ts:83](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L83)
 
 Get access to the monitor service
 
@@ -110,7 +110,7 @@ Get access to the monitor service
 
 > **addCapability**(`capability`): `void`
 
-Defined in: [packages/core/src/models/base.ts:86](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L86)
+Defined in: [packages/core/src/models/base.ts:87](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L87)
 
 Add a capability to the model
 
@@ -134,7 +134,7 @@ Add a capability to the model
 
 > **getCapability**\<`I`, `O`\>(`capabilityId`): `undefined` \| `ModelCapability`\<`I`, `O`\>
 
-Defined in: [packages/core/src/models/base.ts:90](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L90)
+Defined in: [packages/core/src/models/base.ts:91](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L91)
 
 Get a specific capability instance
 
@@ -164,7 +164,7 @@ Get a specific capability instance
 
 > **getCapabilities**(): `ModelCapability`[]
 
-Defined in: [packages/core/src/models/base.ts:98](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L98)
+Defined in: [packages/core/src/models/base.ts:99](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L99)
 
 Get all capabilities supported by this model
 
@@ -182,7 +182,7 @@ Get all capabilities supported by this model
 
 > **hasCapability**(`capabilityId`): `boolean`
 
-Defined in: [packages/core/src/models/base.ts:102](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L102)
+Defined in: [packages/core/src/models/base.ts:103](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L103)
 
 Check if the model supports a specific capability
 
@@ -204,27 +204,25 @@ Check if the model supports a specific capability
 
 ### executeCapability()
 
-> **executeCapability**\<`I`, `O`\>(`capabilityId`, `input`, `config`?): `Promise`\<`O`\>
+> **executeCapability**\<`K`\>(`capabilityId`, `input`, `config`?): `Promise`\<[`ICapabilities`](../interfaces/ICapabilities.md)\[`K`\]\[`"output"`\]\>
 
-Defined in: [packages/core/src/models/base.ts:106](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L106)
+Defined in: [packages/core/src/models/base.ts:107](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L107)
 
 Execute a capability
 
 #### Type Parameters
 
-• **I**
-
-• **O**
+• **K** *extends* `"text-generation"`
 
 #### Parameters
 
 ##### capabilityId
 
-`string`
+`K`
 
 ##### input
 
-`I`
+[`ICapabilities`](../interfaces/ICapabilities.md)\[`K`\]\[`"input"`\]
 
 ##### config?
 
@@ -232,7 +230,7 @@ Execute a capability
 
 #### Returns
 
-`Promise`\<`O`\>
+`Promise`\<[`ICapabilities`](../interfaces/ICapabilities.md)\[`K`\]\[`"output"`\]\>
 
 #### Implementation of
 
@@ -244,7 +242,7 @@ Execute a capability
 
 > `abstract` **checkHealth**(): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/models/base.ts:120](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L120)
+Defined in: [packages/core/src/models/base.ts:123](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L123)
 
 Check model health
 

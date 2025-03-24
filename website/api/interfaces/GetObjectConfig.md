@@ -2,7 +2,7 @@
 
 # Interface: GetObjectConfig
 
-Defined in: [packages/core/src/runtime/index.ts:124](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L124)
+Defined in: [packages/core/src/runtime/types.ts:129](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L129)
 
 ## Extends
 
@@ -14,7 +14,7 @@ Defined in: [packages/core/src/runtime/index.ts:124](https://github.com/UraniumC
 
 > `optional` **temperature**: `number`
 
-Defined in: [packages/core/src/models/base.ts:9](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L9)
+Defined in: [packages/core/src/models/base.ts:10](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L10)
 
 #### Inherited from
 
@@ -26,7 +26,7 @@ Defined in: [packages/core/src/models/base.ts:9](https://github.com/UraniumCorpo
 
 > `optional` **maxTokens**: `number`
 
-Defined in: [packages/core/src/models/base.ts:10](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L10)
+Defined in: [packages/core/src/models/base.ts:11](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L11)
 
 #### Inherited from
 
@@ -38,7 +38,7 @@ Defined in: [packages/core/src/models/base.ts:10](https://github.com/UraniumCorp
 
 > `optional` **stopSequences**: `string`[]
 
-Defined in: [packages/core/src/models/base.ts:11](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L11)
+Defined in: [packages/core/src/models/base.ts:12](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/base.ts#L12)
 
 #### Inherited from
 
@@ -62,4 +62,4 @@ Defined in: [packages/core/src/operations/base.ts:6](https://github.com/UraniumC
 
 > `optional` **maxRetries**: `number`
 
-Defined in: [packages/core/src/runtime/index.ts:125](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/index.ts#L125)
+Defined in: [packages/core/src/runtime/types.ts:130](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L130)

@@ -4,4 +4,4 @@
 
 > **PipelineStep**: `z.infer`\<*typeof* [`PipelineStepSchema`](../variables/PipelineStepSchema.md)\>
 
-Defined in: [packages/core/src/runtime/types.ts:27](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L27)
+Defined in: [packages/core/src/runtime/types.ts:28](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L28)

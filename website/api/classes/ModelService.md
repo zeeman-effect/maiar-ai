@@ -2,7 +2,7 @@
 
 # Class: ModelService
 
-Defined in: [packages/core/src/models/service.ts:18](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L18)
+Defined in: [packages/core/src/models/service.ts:19](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L19)
 
 Service for managing operations on models
 
@@ -12,7 +12,7 @@ Service for managing operations on models
 
 > **new ModelService**(): [`ModelService`](ModelService.md)
 
-Defined in: [packages/core/src/models/service.ts:23](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L23)
+Defined in: [packages/core/src/models/service.ts:24](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L24)
 
 #### Returns
 
@@ -24,7 +24,7 @@ Defined in: [packages/core/src/models/service.ts:23](https://github.com/UraniumC
 
 > **registerModel**(`model`): `void`
 
-Defined in: [packages/core/src/models/service.ts:28](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L28)
+Defined in: [packages/core/src/models/service.ts:29](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L29)
 
 Register a model
 
@@ -44,7 +44,7 @@ Register a model
 
 > **registerCapabilityAlias**(`alias`, `canonicalId`): `void`
 
-Defined in: [packages/core/src/models/service.ts:54](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L54)
+Defined in: [packages/core/src/models/service.ts:55](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L55)
 
 Register a capability alias
 
@@ -66,27 +66,25 @@ Register a capability alias
 
 ### executeCapability()
 
-> **executeCapability**\<`I`, `O`\>(`capabilityId`, `input`, `config`?, `modelId`?): `Promise`\<`O`\>
+> **executeCapability**\<`K`\>(`capabilityId`, `input`, `config`?, `modelId`?): `Promise`\<[`ICapabilities`](../interfaces/ICapabilities.md)\[`K`\]\[`"output"`\]\>
 
-Defined in: [packages/core/src/models/service.ts:65](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L65)
+Defined in: [packages/core/src/models/service.ts:66](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L66)
 
 Execute a capability with the given input
 
 #### Type Parameters
 
-• **I**
-
-• **O**
+• **K** *extends* `"text-generation"`
 
 #### Parameters
 
 ##### capabilityId
 
-`string`
+`K`
 
 ##### input
 
-`I`
+[`ICapabilities`](../interfaces/ICapabilities.md)\[`K`\]\[`"input"`\]
 
 ##### config?
 
@@ -98,7 +96,7 @@ Execute a capability with the given input
 
 #### Returns
 
-`Promise`\<`O`\>
+`Promise`\<[`ICapabilities`](../interfaces/ICapabilities.md)\[`K`\]\[`"output"`\]\>
 
 ***
 
@@ -106,7 +104,7 @@ Execute a capability with the given input
 
 > **getAvailableCapabilities**(): `string`[]
 
-Defined in: [packages/core/src/models/service.ts:113](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L113)
+Defined in: [packages/core/src/models/service.ts:116](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L116)
 
 Get all available capabilities
 
@@ -120,7 +118,7 @@ Get all available capabilities
 
 > **getModelsWithCapability**(`capabilityId`): `string`[]
 
-Defined in: [packages/core/src/models/service.ts:120](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L120)
+Defined in: [packages/core/src/models/service.ts:123](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L123)
 
 Get all models that support a capability
 
@@ -140,7 +138,7 @@ Get all models that support a capability
 
 > **setDefaultModelForCapability**(`capabilityId`, `modelId`): `void`
 
-Defined in: [packages/core/src/models/service.ts:128](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L128)
+Defined in: [packages/core/src/models/service.ts:131](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L131)
 
 Set the default model for a capability
 
@@ -164,7 +162,7 @@ Set the default model for a capability
 
 > **hasCapability**(`capabilityId`): `boolean`
 
-Defined in: [packages/core/src/models/service.ts:136](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L136)
+Defined in: [packages/core/src/models/service.ts:139](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L139)
 
 Check if any model supports a capability
 

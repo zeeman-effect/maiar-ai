@@ -4,7 +4,7 @@
 
 > **CapabilityFactory**\<`I`, `O`\>: (`model`) => `ModelCapability`\<`I`, `O`\>
 
-Defined in: [packages/core/src/models/service.ts:11](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L11)
+Defined in: [packages/core/src/models/service.ts:12](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/models/service.ts#L12)
 
 Type-safe capability factory interface
 

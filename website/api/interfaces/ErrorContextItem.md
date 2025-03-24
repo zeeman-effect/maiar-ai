@@ -2,7 +2,7 @@
 
 # Interface: ErrorContextItem
 
-Defined in: [packages/core/src/runtime/types.ts:85](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L85)
+Defined in: [packages/core/src/runtime/types.ts:86](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L86)
 
 Represents an error that occurred during pipeline execution
 
@@ -16,7 +16,7 @@ Represents an error that occurred during pipeline execution
 
 > **type**: `"error"`
 
-Defined in: [packages/core/src/runtime/types.ts:86](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L86)
+Defined in: [packages/core/src/runtime/types.ts:87](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L87)
 
 #### Overrides
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/runtime/types.ts:86](https://github.com/UraniumCo
 
 > **error**: `string`
 
-Defined in: [packages/core/src/runtime/types.ts:87](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L87)
+Defined in: [packages/core/src/runtime/types.ts:88](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L88)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/runtime/types.ts:87](https://github.com/UraniumCo
 
 > `optional` **failedStep**: `object`
 
-Defined in: [packages/core/src/runtime/types.ts:88](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L88)
+Defined in: [packages/core/src/runtime/types.ts:89](https://github.com/UraniumCorporation/maiar-ai/blob/main/packages/core/src/runtime/types.ts#L89)
 
 #### pluginId
 
