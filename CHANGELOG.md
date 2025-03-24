@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.1](https://github.com/UraniumCorporation/maiar-ai/compare/v0.16.0...v0.16.1) (2025-03-24)
+
+### Features
+
+- capabilty compile time type checking with module augmentation ([369ddca](https://github.com/UraniumCorporation/maiar-ai/commit/369ddca5387289f5713b2f4eb23ee1704669c1f1))
+
 # [0.16.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.15.0...v0.16.0) (2025-03-23)
 
 ### Features
