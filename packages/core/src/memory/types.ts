@@ -1,3 +1,5 @@
+import { Plugin } from "../plugin";
+
 export interface Message {
   id: string;
   role: string;
@@ -37,6 +39,9 @@ export interface MemoryProvider {
   readonly id: string;
   readonly name: string;
   readonly description: string;
+
+  // Get memory plugin
+  getPlugin(): Plugin;
 
   // Store a new message
   storeMessage(message: Message, conversationId: string): Promise<void>;

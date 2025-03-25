@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 
-import { MonitorService } from "@maiar-ai/core";
+import { MonitorService, Plugin } from "@maiar-ai/core";
 import {
   Context,
   Conversation,
@@ -8,6 +8,10 @@ import {
   MemoryQueryOptions,
   Message
 } from "@maiar-ai/core";
+
+import { PostgresConfig } from "./types";
+import { PostgresDatabase } from "./database";
+import { PostgressMemoryPlugin } from "./plugin";
 
 type JSONValue =
   | string
@@ -17,27 +21,22 @@ type JSONValue =
   | JSONValue[]
   | { [key: string]: JSONValue };
 
-export interface PostgresConfig {
-  connectionString: string;
-  ssl?: boolean;
-  max?: number; // maximum number of clients in pool
-}
-
 export class PostgresProvider implements MemoryProvider {
   readonly id = "postgres";
   readonly name = "PostgreSQL Memory";
   readonly description = "Stores conversations in a PostgreSQL database";
 
   private pool: Pool;
+  private plugin: PostgressMemoryPlugin;
 
   constructor(config: PostgresConfig) {
-    this.pool = new Pool({
-      connectionString: config.connectionString,
-      ssl: config.ssl,
-      max: config.max || 20
-    });
+    const poolInstance = PostgresDatabase.getInstance();
+    poolInstance.init(config);
+    // Get the pool safely after initialization
+    this.pool = poolInstance.getPool();
     this.initializeStorage();
     this.checkHealth();
+    this.plugin = new PostgressMemoryPlugin();
   }
 
   private async checkHealth() {
@@ -125,6 +124,10 @@ export class PostgresProvider implements MemoryProvider {
     } finally {
       client.release();
     }
+  }
+
+  public getPlugin(): Plugin {
+    return this.plugin;
   }
 
   async createConversation(options?: {

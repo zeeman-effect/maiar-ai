@@ -10,6 +10,9 @@ import {
   MemoryQueryOptions,
   Message
 } from "@maiar-ai/core";
+import { SQLiteConfig } from "./types";
+import { SQLiteDatabase } from "./database";
+import { SQLiteMemoryPlugin } from "./plugin";
 
 type JSONValue =
   | string
@@ -19,25 +22,25 @@ type JSONValue =
   | JSONValue[]
   | { [key: string]: JSONValue };
 
-export interface SQLiteConfig {
-  dbPath: string;
-}
-
 export class SQLiteProvider implements MemoryProvider {
   readonly id = "sqlite";
   readonly name = "SQLite Memory";
   readonly description = "Stores conversations in a SQLite database";
 
   private db: Database.Database;
+  private plugin: SQLiteMemoryPlugin;
 
   constructor(config: SQLiteConfig) {
     const dbDir = path.dirname(config.dbPath);
     fs.mkdirSync(dbDir, { recursive: true });
 
-    this.db = new Database(path.resolve(config.dbPath));
+    const dbInstance = SQLiteDatabase.getInstance();
+    dbInstance.init(config);
+    this.db = dbInstance.getDatabase();
     this.db.exec("PRAGMA foreign_keys = ON;");
     this.initializeStorage();
     this.checkHealth();
+    this.plugin = new SQLiteMemoryPlugin();
   }
 
   private checkHealth() {
@@ -111,6 +114,10 @@ export class SQLiteProvider implements MemoryProvider {
                 FOREIGN KEY (conversation_id) REFERENCES conversations(id)
             );
         `);
+  }
+
+  public getPlugin(): Plugin {
+    return this.plugin;
   }
 
   async createConversation(options?: {
