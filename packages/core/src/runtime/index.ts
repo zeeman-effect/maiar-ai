@@ -71,7 +71,7 @@ export function createRuntime(options: RuntimeOptions): Runtime {
     modelService,
     monitorService,
     memoryService,
-    plugins: options.plugins
+    plugins: [options.memory.getPlugin(), ...options.plugins]
   });
 
   for (const model of options.models) {

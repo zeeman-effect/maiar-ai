@@ -3,16 +3,15 @@ import path from "path";
 
 import { MonitorService } from "@maiar-ai/core";
 import {
+  MemoryProvider,
+  Message,
   Context,
   Conversation,
-  MemoryProvider,
   MemoryQueryOptions,
-  Message
+  Plugin
 } from "@maiar-ai/core";
-
-export interface FileSystemConfig {
-  basePath: string;
-}
+import { FileSystemConfig } from "./types";
+import { FileSystemMemoryPlugin } from "./plugin";
 
 export class FileSystemProvider implements MemoryProvider {
   readonly id = "filesystem";
@@ -20,10 +19,12 @@ export class FileSystemProvider implements MemoryProvider {
   readonly description = "Stores conversations as JSON files in the filesystem";
 
   private basePath: string;
+  private plugin: FileSystemMemoryPlugin;
 
   constructor(config: FileSystemConfig) {
     this.basePath = config.basePath;
     this.initializeStorage();
+    this.plugin = new FileSystemMemoryPlugin(config);
   }
 
   private async initializeStorage() {
@@ -51,6 +52,10 @@ export class FileSystemProvider implements MemoryProvider {
 
   private getConversationPath(conversationId: string): string {
     return path.join(this.basePath, `${conversationId}.json`);
+  }
+
+  public getPlugin(): Plugin {
+    return this.plugin;
   }
 
   async createConversation(options?: {
