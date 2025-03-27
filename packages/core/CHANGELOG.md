@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.16.1...v0.17.0) (2025-03-27)
+
+### Features
+
+- add logLevel type to MonitorEvent ([7c358bf](https://github.com/UraniumCorporation/maiar-ai/commit/7c358bf1505321bbe4e99277ed4f75a42b5e3045))
+
 ## [0.16.1](https://github.com/UraniumCorporation/maiar-ai/compare/v0.16.0...v0.16.1) (2025-03-24)
 
 **Note:** Version bump only for package @maiar-ai/core
