@@ -11,7 +11,7 @@ import {
 
 import { PostgresConfig } from "./types";
 import { PostgresDatabase } from "./database";
-import { PostgressMemoryPlugin } from "./plugin";
+import { PostgresMemoryPlugin } from "./plugin";
 
 type JSONValue =
   | string
@@ -27,7 +27,7 @@ export class PostgresProvider implements MemoryProvider {
   readonly description = "Stores conversations in a PostgreSQL database";
 
   private pool: Pool;
-  private plugin: PostgressMemoryPlugin;
+  private plugin: PostgresMemoryPlugin;
 
   constructor(config: PostgresConfig) {
     const poolInstance = PostgresDatabase.getInstance();
@@ -36,7 +36,7 @@ export class PostgresProvider implements MemoryProvider {
     this.pool = poolInstance.getPool();
     this.initializeStorage();
     this.checkHealth();
-    this.plugin = new PostgressMemoryPlugin();
+    this.plugin = new PostgresMemoryPlugin();
   }
 
   private async checkHealth() {

@@ -12,8 +12,9 @@
   },
   "dependencies": {
     "@maiar-ai/core": "workspace:*",
-    "@maiar-ai/memory-sqlite": "workspace:*",
+    "@maiar-ai/memory-filesystem": "workspace:*",
     "@maiar-ai/memory-postgres": "workspace:*",
+    "@maiar-ai/memory-sqlite": "workspace:*",
     "@maiar-ai/model-openai": "workspace:*",
     "@maiar-ai/monitor-console": "workspace:*",
     "@maiar-ai/monitor-websocket": "workspace:*",

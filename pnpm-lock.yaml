@@ -137,6 +137,9 @@ importers:
       "@maiar-ai/core":
         specifier: workspace:*
         version: link:../packages/core
+      "@maiar-ai/memory-filesystem":
+        specifier: workspace:*
+        version: link:../packages/memory-filesystem
       "@maiar-ai/memory-postgres":
         specifier: workspace:*
         version: link:../packages/memory-postgres
@@ -247,6 +250,9 @@ importers:
       "@maiar-ai/core":
         specifier: workspace:*
         version: link:../core
+      zod:
+        specifier: 3.24.1
+        version: 3.24.1
     devDependencies:
       "@types/node":
         specifier: 22.13.1
@@ -269,6 +275,9 @@ importers:
       pg-pool:
         specifier: 3.6.1
         version: 3.6.1(pg@8.14.1)
+      zod:
+        specifier: 3.24.1
+        version: 3.24.1
     devDependencies:
       "@types/node":
         specifier: 22.13.1
@@ -291,6 +300,9 @@ importers:
       better-sqlite3:
         specifier: 11.8.1
         version: 11.8.1
+      zod:
+        specifier: 3.24.1
+        version: 3.24.1
     devDependencies:
       "@types/better-sqlite3":
         specifier: 7.6.12

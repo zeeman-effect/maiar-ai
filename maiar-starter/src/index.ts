@@ -13,9 +13,6 @@ import {
   OpenAITextGenerationModel
 } from "@maiar-ai/model-openai";
 
-// Import memory provider
-import { PostgresProvider } from "@maiar-ai/memory-postgres";
-
 // Import monitor providers
 import { ConsoleMonitorProvider } from "@maiar-ai/monitor-console";
 import { WebSocketMonitorProvider } from "@maiar-ai/monitor-websocket";
@@ -45,6 +42,9 @@ process.removeAllListeners("warning");
 config({
   path: path.resolve(__dirname, "../../..", ".env")
 });
+import { PostgresProvider } from "@maiar-ai/memory-postgres";
+// import { FileSystemProvider } from "@maiar-ai/memory-filesystem";
+// import { SQLiteProvider } from "@maiar-ai/memory-sqlite";
 
 // Create and start the agent
 const runtime = createRuntime({
@@ -60,6 +60,12 @@ const runtime = createRuntime({
   memory: new PostgresProvider({
     connectionString: process.env.DATABASE_URL as string
   }),
+  // memory: new SQLiteProvider({
+  //   dbPath: path.join(process.cwd(), "data", "conversations.db")
+  // }),
+  // memory: new FileSystemProvider({
+  //   basePath: path.join(process.cwd(), "data")
+  // }),
   monitor: [
     new ConsoleMonitorProvider(),
     new WebSocketMonitorProvider({

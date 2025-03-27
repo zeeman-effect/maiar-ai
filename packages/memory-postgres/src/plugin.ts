@@ -1,8 +1,13 @@
 import { Pool } from "pg";
 import { AgentContext, PluginBase, PluginResult } from "@maiar-ai/core";
 import { PostgresDatabase } from "./database";
+import { PostgresMemoryUploadSchema, PostgresQuerySchema } from "./types";
+import {
+  generateUploadDocumnetTemplate,
+  generateQueryTemplate
+} from "./templates";
 
-export class PostgressMemoryPlugin extends PluginBase {
+export class PostgresMemoryPlugin extends PluginBase {
   private pool: Pool;
 
   constructor() {
@@ -23,9 +28,12 @@ export class PostgressMemoryPlugin extends PluginBase {
         const timestamp = Date.now();
         const documentId = `doc_${timestamp}_${Math.random().toString(36).substr(2, 9)}`;
 
-        // Add most recent peice of context to the sandbox database
-        const contextItem =
-          context.contextChain[context.contextChain.length - 1];
+        // Get data to store in database from context chain
+        const formattedResponse = await this.runtime.operations.getObject(
+          PostgresMemoryUploadSchema,
+          generateUploadDocumnetTemplate(context.contextChain),
+          { temperature: 0.2 }
+        );
 
         const client = await this.pool.connect();
         try {
@@ -42,9 +50,9 @@ export class PostgressMemoryPlugin extends PluginBase {
 
           const conversationId = conversationResult.rows[0].id;
           await client.query(
-            `INSERT INTO messages (id, conversation_id, role, content, timestamp, context_id, user_message_id)
-                     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-            [documentId, conversationId, contextItem?.content, timestamp]
+            `INSERT INTO sandbox (id, conversation_id, content, timestamp)
+                     VALUES ($1, $2, $3, $4)`,
+            [documentId, conversationId, formattedResponse.content, timestamp]
           );
         } finally {
           client.release();
@@ -56,20 +64,104 @@ export class PostgressMemoryPlugin extends PluginBase {
         };
       }
     });
+
+    this.addExecutor({
+      name: "memory:remove_document",
+      description: "Remove a piece of information from the sandbox database",
+      execute: async (context: AgentContext): Promise<PluginResult> => {
+        const client = await this.pool.connect();
+        try {
+          // Construct query for document ids
+          const queryFormattedResponse =
+            await this.runtime.operations.getObject(
+              PostgresQuerySchema,
+              generateQueryTemplate(context.contextChain),
+              { temperature: 0.2 }
+            );
+
+          // First find matching documents
+          const queryResults = await client.query(queryFormattedResponse.query);
+          const documents = queryResults.rows as { id: string }[];
+
+          if (documents.length === 0) {
+            return {
+              success: false,
+              data: {
+                message: `No documents found with query: ${queryFormattedResponse.query}`
+              }
+            };
+          }
+
+          const documentIds = documents.map((doc) => doc.id);
+          // Delete the documents
+          const result = await client.query(
+            `DELETE FROM sandbox WHERE id = ANY($1::text[])`,
+            [documentIds]
+          );
+
+          if (result.rowCount === 0) {
+            return {
+              success: false,
+              data: {
+                message: `Database was not altered, check query. ${queryFormattedResponse.query}. Found document ids ${documentIds.join(", ")}`
+              }
+            };
+          }
+
+          return {
+            success: true,
+            data: { documentIds }
+          };
+        } finally {
+          client.release();
+        }
+      }
+    });
+
+    this.addExecutor({
+      name: "memory:query",
+      description:
+        "Query the sandbox database for documents that match the user or plugin requests",
+      execute: async (context: AgentContext): Promise<PluginResult> => {
+        const client = await this.pool.connect();
+        try {
+          // Construct query from context
+          const queryFormattedResponse =
+            await this.runtime.operations.getObject(
+              PostgresQuerySchema,
+              generateQueryTemplate(context.contextChain, ["id", "content"]),
+              { temperature: 0.2 }
+            );
+
+          const queryResults = await client.query(queryFormattedResponse.query);
+          const results = queryResults.rows as {
+            id: string;
+            content: string;
+          }[];
+
+          return {
+            success: true,
+            data: { results }
+          };
+        } finally {
+          client.release();
+        }
+      }
+    });
   }
 
   async createTable(): Promise<void> {
     const client = await this.pool.connect();
     try {
       await client.query(`
-              CREATE TABLE IF NOT EXISTS sandbox (
-                id TEXT PRIMARY KEY,
-                conversation_id TEXT NOT NULL,
-                content TEXT NOT NULL,
-                timestamp BIGINT NOT NULL,
-                FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
-              );
-            `);
+        CREATE TABLE IF NOT EXISTS sandbox (
+          id TEXT PRIMARY KEY,
+          conversation_id TEXT NOT NULL,
+          content TEXT NOT NULL,
+          timestamp BIGINT NOT NULL,
+          FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE
+        );
+      `);
     } finally {
       client.release();
     }

@@ -3,7 +3,17 @@ import fs from "fs";
 import fsPromises from "fs/promises";
 
 import { AgentContext, PluginBase, PluginResult } from "@maiar-ai/core";
-import { FileSystemConfig } from "./types";
+import {
+  FileSystemConfig,
+  FileSystemMemoryUploadSchema,
+  FileSystemQuerySchema,
+  FileSystemMemoryDocument,
+  FileSystemQuery
+} from "./types";
+import {
+  generateUploadDocumnetTemplate,
+  generateQueryTemplate
+} from "./templates";
 
 export class FileSystemMemoryPlugin extends PluginBase {
   private sandboxPath: string;
@@ -23,23 +33,20 @@ export class FileSystemMemoryPlugin extends PluginBase {
         "Add a peice of context from the context chain into the sandboxed database",
       execute: async (context: AgentContext): Promise<PluginResult> => {
         const timestamp = Date.now();
-        const documentId = `doc_${timestamp}`;
+        const documentId = `doc_${timestamp}_${Math.random().toString(36).slice(9)}`;
 
-        // Add most recent peice of context to the sandbox database
-        const contextItem =
-          context.contextChain[context.contextChain.length - 1];
+        // Get data to store in database from context chain
+        const formattedResponse = await this.runtime.operations.getObject(
+          FileSystemMemoryUploadSchema,
+          generateUploadDocumnetTemplate(context.contextChain),
+          { temperature: 0.2 }
+        );
 
         // Get the latest conversation ID by finding the most recent conversation file
         let conversationId: string | null = null;
-
         try {
-          // Get the directory containing conversation files
           const baseDir = path.dirname(this.sandboxPath);
-
-          // Read all files in the directory
           const files = fs.readdirSync(baseDir);
-
-          // Filter for JSON files that aren't sandbox.json
           const conversationFiles = files
             .filter((file) => file.endsWith(".json") && file !== "sandbox.json")
             .map((file) => ({
@@ -48,11 +55,9 @@ export class FileSystemMemoryPlugin extends PluginBase {
               stats: fs.statSync(path.join(baseDir, file))
             }));
 
-          // Sort by modification time (most recent first)
+          // Sort by modification time
           conversationFiles.sort((a, b) => b.stats.mtimeMs - a.stats.mtimeMs);
-
-          // Get the most recent conversation ID (filename without extension)
-          if (conversationFiles.length > 0) {
+          if (conversationFiles[0]) {
             conversationId = path.basename(conversationFiles[0].name, ".json");
           }
         } catch (error) {
@@ -66,22 +71,190 @@ export class FileSystemMemoryPlugin extends PluginBase {
           };
         }
 
-        await fsPromises.writeFile(
-          this.sandboxPath,
-          JSON.stringify(
-            {
-              id: documentId,
-              conversation_id: conversationId,
-              content: contextItem?.content,
-              timestamp: timestamp
-            },
-            null,
-            2
-          )
-        );
+        try {
+          const existingContent = await fsPromises.readFile(
+            this.sandboxPath,
+            "utf-8"
+          );
+          const existingData = JSON.parse(existingContent);
+          const documents = existingData.documents || [];
 
-        return { success: true, data: { documentId } };
+          // Add new document
+          documents.push({
+            id: documentId,
+            conversation_id: conversationId,
+            content: formattedResponse?.content,
+            timestamp: timestamp
+          });
+
+          // Write updated documents array
+          await fsPromises.writeFile(
+            this.sandboxPath,
+            JSON.stringify(
+              {
+                documents: documents
+              },
+              null,
+              2
+            )
+          );
+
+          return { success: true, data: { documentId } };
+        } catch (error) {
+          return {
+            success: false,
+            error: `Failed to add document: ${error}`
+          };
+        }
       }
     });
+
+    this.addExecutor({
+      name: "memory:remove_document",
+      description: "Remove a piece of information from the sandbox database",
+      execute: async (context: AgentContext): Promise<PluginResult> => {
+        try {
+          const fileContent = await fsPromises.readFile(
+            this.sandboxPath,
+            "utf-8"
+          );
+          const sandboxData = JSON.parse(fileContent);
+          const documents: FileSystemMemoryDocument[] =
+            sandboxData.documents || [];
+
+          // Get query criteria from context chain
+          const queryFormattedResponse =
+            await this.runtime.operations.getObject(
+              FileSystemQuerySchema,
+              generateQueryTemplate(context.contextChain),
+              { temperature: 0.2 }
+            );
+
+          // Filter documents using query
+          const remainingDocuments = documents.filter(
+            (doc) => !this.matchesQuery(doc, queryFormattedResponse)
+          );
+
+          if (remainingDocuments.length < documents.length) {
+            await fsPromises.writeFile(
+              this.sandboxPath,
+              JSON.stringify({ documents: remainingDocuments }, null, 2)
+            );
+
+            return {
+              success: true,
+              data: { documentIds: remainingDocuments.map((doc) => doc.id) }
+            };
+          }
+
+          return {
+            success: false,
+            data: {
+              message: "No documents found matching the query criteria"
+            }
+          };
+        } catch (error) {
+          if (error instanceof Error) {
+            return {
+              success: false,
+              data: {
+                message: `Error removing document: ${error.message}`
+              }
+            };
+          }
+          throw error;
+        }
+      }
+    });
+
+    this.addExecutor({
+      name: "memory:query",
+      description:
+        "Query the sandbox database for documents that match the user or plugin requests",
+      execute: async (context: AgentContext): Promise<PluginResult> => {
+        try {
+          const fileContent = await fsPromises.readFile(
+            this.sandboxPath,
+            "utf-8"
+          );
+          const sandboxData = JSON.parse(fileContent);
+          const documents: FileSystemMemoryDocument[] =
+            sandboxData.documents || [];
+
+          // Get query criteria from context chain
+          const queryFormattedResponse =
+            await this.runtime.operations.getObject(
+              FileSystemQuerySchema,
+              generateQueryTemplate(context.contextChain),
+              { temperature: 0.2 }
+            );
+
+          // Find all matching documents
+          const matchingDocuments = documents.filter((doc) =>
+            this.matchesQuery(doc, queryFormattedResponse)
+          );
+
+          return {
+            success: true,
+            data: {
+              results: matchingDocuments.map((doc) => ({
+                id: doc.id,
+                content: doc.content
+              }))
+            }
+          };
+        } catch (error) {
+          if (error instanceof Error) {
+            return {
+              success: false,
+              data: {
+                message: `Error querying documents: ${error.message}`
+              }
+            };
+          }
+          throw error;
+        }
+      }
+    });
+  }
+
+  // Helper method for query filtering
+  private matchesQuery(
+    document: FileSystemMemoryDocument,
+    query: FileSystemQuery
+  ): boolean {
+    // Check ID match if specified
+    if (query.ids && query.ids.length > 0) {
+      if (!query.ids.includes(document.id)) {
+        return false;
+      }
+    }
+
+    // Check conversation ID match if specified
+    if (query.conversationIds && query.conversationIds.length > 0) {
+      if (!query.conversationIds.includes(document.conversationId)) {
+        return false;
+      }
+    }
+
+    // Check content match if specified
+    if (query.content) {
+      const contentLower = document.content?.toLowerCase() || "";
+      const queryLower = query.content.toLowerCase();
+      if (!contentLower.includes(queryLower)) {
+        return false;
+      }
+    }
+
+    // Check timestamp ranges if specified
+    if (query.before && document.timestamp >= query.before) {
+      return false;
+    }
+    if (query.after && document.timestamp <= query.after) {
+      return false;
+    }
+
+    // If all checks pass, document matches query criteria
+    return true;
   }
 }
