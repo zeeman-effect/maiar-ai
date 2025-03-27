@@ -8,11 +8,13 @@ import {
   Conversation,
   MemoryProvider,
   MemoryQueryOptions,
-  Message
+  Message,
+  Plugin
 } from "@maiar-ai/core";
-import { SQLiteConfig } from "./types";
+
 import { SQLiteDatabase } from "./database";
 import { SQLiteMemoryPlugin } from "./plugin";
+import { SQLiteConfig } from "./types";
 
 type JSONValue =
   | string

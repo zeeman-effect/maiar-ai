@@ -72,12 +72,27 @@ export class FileSystemMemoryPlugin extends PluginBase {
         }
 
         try {
-          const existingContent = await fsPromises.readFile(
-            this.sandboxPath,
-            "utf-8"
-          );
-          const existingData = JSON.parse(existingContent);
-          const documents = existingData.documents || [];
+          let documents = [];
+          try {
+            const existingContent = await fsPromises.readFile(
+              this.sandboxPath,
+              "utf-8"
+            );
+            const existingData = JSON.parse(existingContent);
+            documents = existingData.documents || [];
+          } catch (error) {
+            if (
+              error instanceof Error &&
+              "code" in error &&
+              error.code !== "ENOENT"
+            ) {
+              throw new Error(
+                `An unexpected error occured when trying to add document to database: ${error.message}`
+              );
+            }
+            // Only initialize empty documents array for file not found errors
+            documents = [];
+          }
 
           // Add new document
           documents.push({
