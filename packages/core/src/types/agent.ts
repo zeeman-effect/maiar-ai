@@ -40,6 +40,7 @@ export interface EventQueue {
 // The full context chain container
 export interface AgentContext {
   contextChain: BaseContextItem[];
+  conversationId?: string;
   eventQueue?: EventQueue;
   platformContext?: {
     platform: string;
