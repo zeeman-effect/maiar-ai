@@ -66,7 +66,7 @@ pnpm install
 3. Navigate to the client directory:
 
 ```bash
-cd packages/maiar-client
+cd maiar-client
 ```
 
 4. Start the development server:
