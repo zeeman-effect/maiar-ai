@@ -1,11 +1,13 @@
 import { Pool } from "pg";
+
 import { AgentContext, PluginBase, PluginResult } from "@maiar-ai/core";
+
 import { PostgresDatabase } from "./database";
-import { PostgresMemoryUploadSchema, PostgresQuerySchema } from "./types";
 import {
-  generateUploadDocumnetTemplate,
-  generateQueryTemplate
+  generateQueryTemplate,
+  generateUploadDocumentTemplate
 } from "./templates";
+import { PostgresMemoryUploadSchema, PostgresQuerySchema } from "./types";
 
 export class PostgresMemoryPlugin extends PluginBase {
   private pool: Pool;
@@ -31,24 +33,22 @@ export class PostgresMemoryPlugin extends PluginBase {
         // Get data to store in database from context chain
         const formattedResponse = await this.runtime.operations.getObject(
           PostgresMemoryUploadSchema,
-          generateUploadDocumnetTemplate(context.contextChain),
+          generateUploadDocumentTemplate(context.contextChain),
           { temperature: 0.2 }
         );
 
         const client = await this.pool.connect();
         try {
-          // Query to get the most recent conversation ID from the conversations table
-          const conversationResult = await client.query(`
-                    SELECT id FROM conversations 
-                    ORDER BY created_at DESC 
-                    LIMIT 1
-                  `);
-
-          if (conversationResult.rows.length === 0) {
-            throw new Error("No conversations found in the database");
+          const conversationId = context.conversationId;
+          if (!conversationId) {
+            return {
+              success: false,
+              data: {
+                message: "Conversation ID not available in agent context"
+              }
+            };
           }
 
-          const conversationId = conversationResult.rows[0].id;
           await client.query(
             `INSERT INTO sandbox (id, conversation_id, content, timestamp)
                      VALUES ($1, $2, $3, $4)`,

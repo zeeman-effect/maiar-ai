@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 import { BaseContextItem } from "@maiar-ai/core";
 
-export function generateUploadDocumnetTemplate(
+export function generateUploadDocumentTemplate(
   contextChain: BaseContextItem[]
 ): string {
   return `Generate a response based on the context chain. Your response shoudl be a JSON object with a single "content" field containing your response.

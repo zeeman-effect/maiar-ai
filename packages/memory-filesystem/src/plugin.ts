@@ -1,19 +1,19 @@
-import path from "path";
-import fs from "fs";
 import fsPromises from "fs/promises";
+import path from "path";
 
 import { AgentContext, PluginBase, PluginResult } from "@maiar-ai/core";
+
+import {
+  generateQueryTemplate,
+  generateUploadDocumentTemplate
+} from "./templates";
 import {
   FileSystemConfig,
-  FileSystemMemoryUploadSchema,
-  FileSystemQuerySchema,
   FileSystemMemoryDocument,
-  FileSystemQuery
+  FileSystemMemoryUploadSchema,
+  FileSystemQuery,
+  FileSystemQuerySchema
 } from "./types";
-import {
-  generateUploadDocumnetTemplate,
-  generateQueryTemplate
-} from "./templates";
 
 export class FileSystemMemoryPlugin extends PluginBase {
   private sandboxPath: string;
@@ -38,36 +38,15 @@ export class FileSystemMemoryPlugin extends PluginBase {
         // Get data to store in database from context chain
         const formattedResponse = await this.runtime.operations.getObject(
           FileSystemMemoryUploadSchema,
-          generateUploadDocumnetTemplate(context.contextChain),
+          generateUploadDocumentTemplate(context.contextChain),
           { temperature: 0.2 }
         );
 
-        // Get the latest conversation ID by finding the most recent conversation file
-        let conversationId: string | null = null;
-        try {
-          const baseDir = path.dirname(this.sandboxPath);
-          const files = fs.readdirSync(baseDir);
-          const conversationFiles = files
-            .filter((file) => file.endsWith(".json") && file !== "sandbox.json")
-            .map((file) => ({
-              name: file,
-              path: path.join(baseDir, file),
-              stats: fs.statSync(path.join(baseDir, file))
-            }));
-
-          // Sort by modification time
-          conversationFiles.sort((a, b) => b.stats.mtimeMs - a.stats.mtimeMs);
-          if (conversationFiles[0]) {
-            conversationId = path.basename(conversationFiles[0].name, ".json");
-          }
-        } catch (error) {
-          console.error("Error finding latest conversation:", error);
-        }
-
+        const conversationId = context.conversationId;
         if (!conversationId) {
           return {
             success: false,
-            error: "No conversation found"
+            error: "Conversation ID not available in agent context"
           };
         }
 
