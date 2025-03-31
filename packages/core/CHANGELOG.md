@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.19.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.18.1...v0.19.0) (2025-03-31)
+
+### Bug Fixes
+
+- **core:** 🐛♻️ rework required requiredCapabilities field and fixed plugins not getting text-generation intellisense when calling executeCapabilities ([15d55bc](https://github.com/UraniumCorporation/maiar-ai/commit/15d55bcb698f111bf504c75269f5475888f2db20))
+
+### Code Refactoring
+
+- **core:** ♻️🔥 deprecate createRuntime and move its logic into Runtime.init static method ([23a80c7](https://github.com/UraniumCorporation/maiar-ai/commit/23a80c7856956ee8a35edee745b158eab0f86661))
+- **core:** ♻️🔥 rename PluginBase to Plugin and re-organize class properties and methods ([c229124](https://github.com/UraniumCorporation/maiar-ai/commit/c2291242ec683263f89bbcf56822d7bdad256038))
+
+### BREAKING CHANGES
+
+- **core:** This affects all official plugins supported by us as well since the naming convention is now suffixed with plugin instead of prefixed so their reference will need to be changed if upgrading
+- **core:** Deprecates createRuntime utility function and removes it from the codebase
+
 ## [0.18.1](https://github.com/UraniumCorporation/maiar-ai/compare/v0.18.0...v0.18.1) (2025-03-31)
 
 **Note:** Version bump only for package @maiar-ai/core
