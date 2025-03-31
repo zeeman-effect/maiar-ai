@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.18.1](https://github.com/UraniumCorporation/maiar-ai/compare/v0.18.0...v0.18.1) (2025-03-31)
+
+**Note:** Version bump only for package @maiar-ai/plugin-terminal
+
 # [0.18.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.17.0...v0.18.0) (2025-03-28)
 
 **Note:** Version bump only for package @maiar-ai/plugin-terminal
