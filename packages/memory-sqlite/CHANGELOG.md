@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.20.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.19.0...v0.20.0) (2025-04-05)
+
+### Bug Fixes
+
+- **memory-sqlite:** 🐛 create directory if it does not exist in constructor ([57d2fb3](https://github.com/UraniumCorporation/maiar-ai/commit/57d2fb3e8935109184505212e8a83816d919a026))
+
 # [0.19.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.18.1...v0.19.0) (2025-03-31)
 
 ### Bug Fixes

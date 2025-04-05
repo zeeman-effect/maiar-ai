@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.20.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.19.0...v0.20.0) (2025-04-05)
+
+### Code Refactoring
+
+- **core:** ♻️ rework model provider to provide lifecycle method and constructor object arg ([99c069b](https://github.com/UraniumCorporation/maiar-ai/commit/99c069b1842257583e7603f0eed134ebe4b69a56))
+- **core:** ♻️ rework Plugin abstract class definition APIs ([6d59524](https://github.com/UraniumCorporation/maiar-ai/commit/6d59524014413c039749b78d63ba41b0d4e96151))
+
+### Features
+
+- **core:** ✨ add lifecycle methods that must be implemented by memory provider subclasses ([8baf703](https://github.com/UraniumCorporation/maiar-ai/commit/8baf70347aa4b1c78c458eed7a68fa365bb18cd0))
+- **core:** ✨ add logger get accessor to plugin/model/memory provider describing their scope ([50dc3dc](https://github.com/UraniumCorporation/maiar-ai/commit/50dc3dc362b73f839e5c7f90a120ab3b0268eedf))
+- **core:** ✨ add logger get accessor to plugin/model/memory/capability provider/registry describing their scope ([9a2310c](https://github.com/UraniumCorporation/maiar-ai/commit/9a2310c25d2db8284848c2bc9ab4a1a15bd85f09))
+- **core:** ✨ add logger get accessor to runtime for instance + static ([eea7bcf](https://github.com/UraniumCorporation/maiar-ai/commit/eea7bcff513c8217043143fc1c2deb94f3a2d431))
+- **core:** ✨ add options to runtime init to configure winston logger ([eb09a06](https://github.com/UraniumCorporation/maiar-ai/commit/eb09a06d94f26b410f2f9fcaaf4333d46eb717d2))
+- **core:** ✨ add winston logger singleton with default console transport ([cd6ba3d](https://github.com/UraniumCorporation/maiar-ai/commit/cd6ba3d7efb5eb2f2d6ba8e9073cf8c92368e085))
+- **core:** ✨ create maiar's runtime console log transport with a predefined format ([a2fc553](https://github.com/UraniumCorporation/maiar-ai/commit/a2fc5538985965dc4e8adb633bafe13f41c22f1d))
+- **core:** ✨ create WebSocket custom winston transport that creates a websocket server and sends logs to its connected clients ([803ac86](https://github.com/UraniumCorporation/maiar-ai/commit/803ac86818404710d7befc610dfe75a1d9231276))
+- **core:** ✨ handle signals to shutdown runtime gracefully ([3df1d23](https://github.com/UraniumCorporation/maiar-ai/commit/3df1d235069a73489fcf6e8d567e8feadc5161aa))
+
+### BREAKING CHANGES
+
+- **core:** - model provider now has shutdown lifecycle method for subclasses to implement
+
+* constructor args have been converted from position arguments to object argument with required fields
+
+- **core:** adds lifecycle methods (init, checkHealth, shutdown) that by must be implemented by memory provider subclasses
+- **core:** - add init, shutdown abstract methods
+
+* add \_setRuntime method accessible through the \_setRuntime Symbol (meant to act as a C++ friend class)
+* move types into dedicated plugin.types file
+* renames ExecutorImplementation to Executor
+
 # [0.19.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.18.1...v0.19.0) (2025-03-31)
 
 ### Bug Fixes
