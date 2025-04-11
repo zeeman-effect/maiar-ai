@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.20.0...v0.21.0) (2025-04-11)
+
+### Features
+
+- expose server getter ([3260cf1](https://github.com/UraniumCorporation/maiar-ai/commit/3260cf1ed8cca4a4502ac582914c12a35fd5d7cf))
+- runtime express server manager ([9317264](https://github.com/UraniumCorporation/maiar-ai/commit/9317264eb2ab0586921de52c392aca7d79c936c9))
+- text plugin and websocket transport same server and port ([8999ec1](https://github.com/UraniumCorporation/maiar-ai/commit/8999ec1da6b3ac2c66e6409c4b92061fc8e962c1))
+- websocket telemetry over shared http server instance ([4bf0f4a](https://github.com/UraniumCorporation/maiar-ai/commit/4bf0f4a84b70d35e2aed5b43ac3521bc7d7f3496))
+
 # [0.20.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.19.0...v0.20.0) (2025-04-05)
 
 ### Code Refactoring
