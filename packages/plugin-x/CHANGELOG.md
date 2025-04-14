@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.21.1](https://github.com/UraniumCorporation/maiar-ai/compare/v0.21.0...v0.21.1) (2025-04-14)
+
+### Bug Fixes
+
+- runtime getter resolves runtime undefined at executor mount on registration ([1bccf80](https://github.com/UraniumCorporation/maiar-ai/commit/1bccf80b28f112e4d78af7a2fc94aff1c13301f3))
+
 # [0.21.0](https://github.com/UraniumCorporation/maiar-ai/compare/v0.20.0...v0.21.0) (2025-04-11)
 
 ### Features
