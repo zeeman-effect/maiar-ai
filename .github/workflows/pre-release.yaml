@@ -1,17 +1,17 @@
 ---
-name: 🏷️ Github Release
-run-name: 🏷️ Github Release - Tag & Publish Latest Release from ${{ github.ref_name }} by @${{ github.actor }}
+name: 🏷️ Github Pre-release
+run-name: 🏷️ Github Pre-release - Tag & Publish Pre-release from ${{ github.ref_name }} by @${{ github.actor }}
 on:
   workflow_dispatch:
     inputs:
-      specifier:
-        description: "Version specifier (e.g., patch, minor, major)"
+      pre-id:
+        description: "Pre-release identifier (e.g., alpha, beta, rc)"
         required: true
         type: choice
         options:
-          - "patch"
-          - "minor"
-          - "major"
+          - alpha
+          - beta
+          - rc
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -20,11 +20,10 @@ concurrency:
 env:
   CI: ${{ vars.CI }}
   HUSKY: ${{ vars.HUSKY }}
-  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 jobs:
   github-release:
-    name: 🏷️ Github Release
+    name: 🏷️ Github Pre-release
     runs-on: ubuntu-latest
     steps:
       - name: 🔑 Create GitHub App Token
@@ -51,8 +50,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pnpm nx:release version ${{ github.event.inputs.specifier }}
+          pnpm nx:release version prerelease --preid ${{ github.event.inputs.pre-id }}
 
+          # Use this locally when you've manually bumped a prerelease (e.g. 0.0.1-alpha.0 → 0.1.0-alpha.0, patch prerelease → minor prerelease)
           # Generates changelog from last *stable* tag up to current prerelease version
           VERSION=$(jq -r '.version' packages/core/package.json)
           LATEST_STABLE=$(git tag --list | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
