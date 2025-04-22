@@ -1,3 +1,24 @@
+## 0.22.1 (2025-04-22)
+
+### 🩹 Fixes
+
+- **core:** 🐛 release ports on rebuild by fully terminating prior process group ([#108](https://github.com/UraniumCorporation/maiar-ai/pull/108))
+
+### 🏡 Chore
+
+- **config:** 🔧 define explicit inputs for build, typecheck, and lint targets to improve task caching ([#111](https://github.com/UraniumCorporation/maiar-ai/pull/111))
+
+### 🤖 CI
+
+- **cd:** standup nx for github tags/releases and npm package publishing ([#110](https://github.com/UraniumCorporation/maiar-ai/pull/110))
+- **cd:** 👷 add pre-release workflow and automatic tag-based publishing ([#114](https://github.com/UraniumCorporation/maiar-ai/pull/114))
+- **nx:** ☁️ set up nx cloud workspace ([#113](https://github.com/UraniumCorporation/maiar-ai/pull/113))
+
+### ❤️ Thank You
+
+- ktn1234 @ktn1234
+- pbit @0xPBIT
+
 # Change Log
 
 All notable changes to this project will be documented in this file.
