@@ -23,6 +23,7 @@ import {
   sendMessageExecutor
 } from "@maiar-ai/plugin-discord";
 import { ImageGenerationPlugin } from "@maiar-ai/plugin-image";
+import { MCPPlugin } from "@maiar-ai/plugin-mcp";
 import { SearchPlugin } from "@maiar-ai/plugin-search";
 import { TerminalPlugin } from "@maiar-ai/plugin-terminal";
 import { TextGenerationPlugin } from "@maiar-ai/plugin-text";
@@ -70,6 +71,24 @@ async function main() {
       user: "ligma",
       agentName: "maiar-starter"
     }),
+    new MCPPlugin([
+      {
+        // ----- server #1 (puppeteer) -----
+        command: "npx",
+        args: ["-y", "@modelcontextprotocol/server-puppeteer"],
+        env: {
+          PUPPETEER_LAUNCH_OPTIONS: JSON.stringify({ headless: false }),
+          ALLOW_DANGEROUS: "true"
+        },
+        clientName: "puppeteer"
+      },
+      {
+        // ----- server #2 (example tools) -----
+        command: "npx",
+        args: ["-y", "@modelcontextprotocol/server-everything"],
+        clientName: "everything"
+      }
+    ]),
     new CharacterPlugin({
       character: readFileSync(join(process.cwd(), "character.xml"), "utf-8")
     }),
