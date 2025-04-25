@@ -103,6 +103,11 @@ export class MCPPlugin extends Plugin {
         name: clientName,
         version: clientVersion
       });
+
+      this.logger.info("connecting to MCP server...", {
+        type: "plugin-mcp.init",
+        clientName
+      });
       await client.connect(transport);
 
       // register executors
@@ -112,7 +117,7 @@ export class MCPPlugin extends Plugin {
       this.transports.push(transport);
       this.mcps.push(client);
 
-      this.logger.info("connected to MCP server", {
+      this.logger.info("connected to MCP server successfully", {
         type: "plugin-mcp.init",
         clientName,
         tools: tools.map((t) => t.name)
@@ -122,11 +127,39 @@ export class MCPPlugin extends Plugin {
 
   public async shutdown(): Promise<void> {
     for (const client of this.mcps) {
-      await client.close().catch(() => void 0);
+      try {
+        this.logger.info("closing MCP client...", {
+          type: "plugin-mcp.shutdown"
+        });
+        await client.close();
+        this.logger.info("closed MCP client sucessfully", {
+          type: "plugin-mcp.shutdown"
+        });
+      } catch (err: unknown) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        this.logger.error("failed to close MCP client", {
+          type: "plugin-mcp.shutdown",
+          error: error.message
+        });
+      }
     }
-    for (const t of this.transports) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (t as any)?.close?.();
+
+    for (const transport of this.transports) {
+      try {
+        this.logger.info("closing MCP transport...", {
+          type: "plugin-mcp.shutdown"
+        });
+        await transport.close();
+        this.logger.info("closed MCP transport successfully", {
+          type: "plugin-mcp.shutdown"
+        });
+      } catch (err: unknown) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        this.logger.error("failed to close MCP transport", {
+          type: "plugin-mcp.shutdown",
+          error: error.message
+        });
+      }
     }
   }
 
@@ -192,9 +225,9 @@ export class MCPPlugin extends Plugin {
  * Supports: type: object / string / number / boolean / integer / array
  * Nested objects & arrays are handled recursively. Anything unknown → z.any().
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 function jsonSchemaToZod(schema: unknown): ZodType<unknown> {
   if (!schema || typeof schema !== "object") return z.any();
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const s: any = schema;
 
   switch (s.type) {
