@@ -1,3 +1,25 @@
+## 0.23.0 (2025-04-25)
+
+### 🚀 Features
+
+- **model-openai:** add new GPT-4.1 models to text capabilities ([#94](https://github.com/UraniumCorporation/maiar-ai/pull/94))
+- **plugin-codex:** plugin codex standup ([#115](https://github.com/UraniumCorporation/maiar-ai/pull/115))
+- **plugin-mcp:** stand up mcp plugin ([#109](https://github.com/UraniumCorporation/maiar-ai/pull/109))
+
+### 🩹 Fixes
+
+- **client:** default chat url ([#116](https://github.com/UraniumCorporation/maiar-ai/pull/116))
+
+### 💅 Refactors
+
+- **plugin-mcp:** 🔊 improve logging and error handling for client lifecycle ([#117](https://github.com/UraniumCorporation/maiar-ai/pull/117))
+
+### ❤️ Thank You
+
+- ktn1234 @ktn1234
+- pbit @0xPBIT
+- quaq @0x0aa0
+
 ## 0.22.1 (2025-04-22)
 
 ### 🩹 Fixes
